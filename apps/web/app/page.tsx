@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 
 // 模拟帖子数据
@@ -15,6 +16,7 @@ const posts = [
     votes: 42,
     replies: 28,
     views: 1256,
+    preview: "做了3年B端产品，感觉遇到了天花板。每天就是画原型、写PRD，和开发撕需求。想转C端但又担心经验不匹配...有没有大佬有类似经历可以分享下？",
   },
   {
     id: 2,
@@ -27,6 +29,7 @@ const posts = [
     votes: 18,
     replies: 15,
     views: 456,
+    preview: "领导让我做一个数据看板展示给客户看，要求既能看数据趋势，又要做得很炫酷。有什么工具可以快速上手？",
   },
   {
     id: 3,
@@ -39,6 +42,7 @@ const posts = [
     votes: 89,
     replies: 56,
     views: 2341,
+    preview: "刚从大厂跳到创业公司，节奏完全不一样了。之前每天按排期走，现在恨不得一个人当三个人用...",
   },
   {
     id: 4,
@@ -51,6 +55,7 @@ const posts = [
     votes: 156,
     replies: 42,
     views: 5620,
+    preview: "整理了一份内部使用的PRD模板，包含需求背景、功能列表、原型链接、验收标准等模块，直接可用！",
   },
   {
     id: 5,
@@ -63,6 +68,7 @@ const posts = [
     votes: 203,
     replies: 89,
     views: 8932,
+    preview: "最近在研究怎么用AI提效，发现Prompt工程能力很重要。还有什么能力是PM在AI时代需要重点培养的？",
   },
   {
     id: 6,
@@ -75,6 +81,7 @@ const posts = [
     votes: 67,
     replies: 34,
     views: 3210,
+    preview: "投了几个大厂，面试都挂在这个问题上。说太真诚显得没能力，说太圆滑又显得不真诚，到底该怎么回答？",
   },
   {
     id: 7,
@@ -87,6 +94,7 @@ const posts = [
     votes: 91,
     replies: 67,
     views: 4532,
+    preview: "公司之前用Axure，但最近大家都在说Figma。想问问各位PM的真实使用体验，哪个更适合产品经理快速出原型？",
   },
   {
     id: 8,
@@ -99,12 +107,52 @@ const posts = [
     votes: 234,
     replies: 78,
     views: 12000,
+    preview: "运营天天提需求，技术说做不了，老板说必须上...夹在中间太难了。有什么高情商拒绝需求的方法吗？",
   },
 ];
 
+// 社交证明数据
+const socialProofItems = [
+  { name: "李产品", action: "刚刚加入了社区" },
+  { name: "王经理", action: "发布了新帖子" },
+  { name: "张PM", action: "回复了热门话题" },
+  { name: "赵总监", action: "刚刚加入了社区" },
+  { name: "刘设计", action: "发布了新帖子" },
+  { name: "陈产品", action: "收藏了工具合集" },
+  { name: "周经理", action: "刚刚加入了社区" },
+  { name: "吴PM", action: "回复了热门话题" },
+];
+
 export default function HomePage() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [previewPost, setPreviewPost] = useState<typeof posts[0] | null>(null);
+
+  const hotPost = posts[4]; // AIGC那个最热
+
   return (
     <div className="main-layout">
+      {/* 顶部公告栏 */}
+      <div className="top-banner">
+        <div className="top-banner-content">
+          <span>🎉</span>
+          <span>PM茶水间全新升级，<strong>产品经理的聚集地</strong></span>
+        </div>
+      </div>
+
+      {/* 社交证明滚动 */}
+      <div className="social-proof-bar">
+        <div className="social-proof-track">
+          {[...socialProofItems, ...socialProofItems].map((item, i) => (
+            <div key={i} className="social-proof-item">
+              <div className="proof-avatar">{item.name[0]}</div>
+              <span>
+                <strong>{item.name}</strong> {item.action}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* 左侧导航 */}
       <aside className="left-nav">
         <div className="nav-logo">
@@ -155,14 +203,14 @@ export default function HomePage() {
 
         <nav className="nav-section">
           <div className="nav-section-title">账号</div>
-          <Link href="#" className="nav-item">
+          <Link href="#" className="nav-item" onClick={(e) => { e.preventDefault(); setDrawerOpen(true); }}>
             <span className="nav-item-icon">📧</span>
             <span>登录 / 注册</span>
           </Link>
         </nav>
 
         <div className="nav-user">
-          <div className="nav-user-info">
+          <div className="nav-user-info" onClick={() => setDrawerOpen(true)}>
             <div className="nav-avatar">游</div>
             <div className="nav-user-name">
               <strong>游客用户</strong>
@@ -188,10 +236,14 @@ export default function HomePage() {
         <div className="content-body">
           <div className="post-list">
             {posts.map((post) => (
-              <article key={post.id} className="post-item">
+              <article
+                key={post.id}
+                className="post-item"
+                onClick={() => setPreviewPost(post)}
+              >
                 <div className="post-avatar">{post.avatar}</div>
                 <div className="post-main">
-                  <Link href={`/post/${post.id}`} className="post-title">
+                  <Link href={`/post/${post.id}`} className="post-title" onClick={(e) => e.stopPropagation()}>
                     {post.title}
                   </Link>
                   <div className="post-meta">
@@ -232,7 +284,7 @@ export default function HomePage() {
       {/* 右侧边栏 */}
       <aside className="right-rail">
         {/* 发帖按钮 */}
-        <button className="new-post-btn">
+        <button className="new-post-btn" onClick={() => setDrawerOpen(true)}>
           <span>✏️</span>
           <span>发布新帖</span>
         </button>
@@ -240,7 +292,7 @@ export default function HomePage() {
         {/* 登录卡片 */}
         <div className="rail-card login-card">
           <p>登录后可发布帖子、参与讨论</p>
-          <button className="login-btn">登录 / 注册</button>
+          <button className="login-btn" onClick={() => setDrawerOpen(true)}>登录 / 注册</button>
         </div>
 
         {/* 快捷入口 */}
@@ -306,7 +358,7 @@ export default function HomePage() {
             <span>📋</span>
             社区规范
           </div>
-          <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', paddingLeft: '16px', lineHeight: 1.8 }}>
+          <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', paddingLeft: '16px', lineHeight: 2 }}>
             <li>友善交流，互相尊重</li>
             <li>禁止发布广告、软文</li>
             <li>优质内容优先展示</li>
@@ -314,6 +366,89 @@ export default function HomePage() {
           </ul>
         </div>
       </aside>
+
+      {/* 今日热帖浮窗 */}
+      <div className="hot-post-float">
+        <div className="hot-post-float-header">
+          <span>🔥</span>
+          <span>今日最热</span>
+        </div>
+        <div className="hot-post-float-content" onClick={() => setPreviewPost(hotPost)}>
+          <div className="hot-post-title">{hotPost.title}</div>
+          <div className="hot-post-meta">
+            <span>👁️ {hotPost.views}</span>
+            <span>💬 {hotPost.replies}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 抽屉遮罩 */}
+      <div
+        className={`drawer-overlay ${drawerOpen ? 'open' : ''}`}
+        onClick={() => setDrawerOpen(false)}
+      />
+
+      {/* 登录抽屉 */}
+      <div className={`drawer ${drawerOpen ? 'open' : ''}`}>
+        <div className="drawer-header">
+          <h3>欢迎回来</h3>
+          <button className="drawer-close" onClick={() => setDrawerOpen(false)}>×</button>
+        </div>
+        <div className="drawer-body">
+          <div className="form-group">
+            <label>邮箱</label>
+            <input type="email" className="form-input" placeholder="请输入邮箱" />
+          </div>
+          <div className="form-group">
+            <label>密码</label>
+            <input type="password" className="form-input" placeholder="请输入密码" />
+          </div>
+          <button className="new-post-btn" style={{ marginTop: '8px' }}>
+            登录
+          </button>
+
+          <div className="drawer-divider">或</div>
+
+          <button className="login-btn">
+            📧 使用邮箱注册
+          </button>
+
+          <p className="drawer-footer-text">
+            还没有账号？<a href="#">立即注册</a>
+          </p>
+        </div>
+      </div>
+
+      {/* 帖子预览弹窗 */}
+      {previewPost && (
+        <>
+          <div
+            className={`drawer-overlay open`}
+            onClick={() => setPreviewPost(null)}
+          />
+          <div className="hot-post-float" style={{ top: '50%', left: '50%', right: 'auto', bottom: 'auto', transform: 'translate(-50%, -50%)', width: '500px', maxWidth: '90vw' }}>
+            <div className="hot-post-float-header">
+              <span>📖</span>
+              <span>帖子预览</span>
+              <button className="drawer-close" onClick={() => setPreviewPost(null)} style={{ marginLeft: 'auto' }}>×</button>
+            </div>
+            <div className="hot-post-float-content" style={{ padding: '24px' }}>
+              <div className="hot-post-title" style={{ fontSize: '18px', marginBottom: '16px' }}>{previewPost.title}</div>
+              <p style={{ fontSize: '14px', lineHeight: 1.8, color: 'var(--text-secondary)', marginBottom: '20px' }}>
+                {previewPost.preview}
+              </p>
+              <Link
+                href={`/post/${previewPost.id}`}
+                className="new-post-btn"
+                style={{ textDecoration: 'none' }}
+                onClick={() => setPreviewPost(null)}
+              >
+                查看完整帖子 →
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
