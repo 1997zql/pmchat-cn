@@ -1,0 +1,101 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+
+      - name: Build API
+        run: npm run build:api
+
+      - name: Build Web
+        run: npm run build:web
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            echo "=== Starting deployment ==="
+            
+            # Backup current deployment
+            if [ -d "/srv/pmchat" ]; then
+              echo "Creating backup..."
+              tar -czf "/tmp/pmchat-backup-$(date +%Y%m%d-%H%M%S).tar.gz" -C /srv/pmchat . || true
+            fi
+            
+            # Create temp directory
+            rm -rf /tmp/pmchat-deploy
+            mkdir -p /tmp/pmchat-deploy
+            
+            echo "=== Cloning repository ==="
+            cd /tmp/pmchat-deploy
+            git clone --depth 1 https://github.com/1997zql/pmchat-cn.git .
+            
+            echo "=== Syncing to production ==="
+            # Preserve .env file
+            if [ -f "/srv/pmchat/.env" ]; then
+              cp /srv/pmchat/.env /tmp/pmchat-deploy/.env
+            fi
+            
+            # Sync files (excluding .git and node_modules)
+            rsync -av --delete \
+              --exclude='.git' \
+              --exclude='node_modules' \
+              --exclude='.next' \
+              --exclude='dist' \
+              --exclude='coverage' \
+              /tmp/pmchat-deploy/ /srv/pmchat/
+            
+            echo "=== Installing dependencies ==="
+            cd /srv/pmchat
+            npm ci --production
+            
+            echo "=== Generating Prisma Client ==="
+            npm run db:generate
+            
+            echo "=== Building applications ==="
+            npm run build:api
+            npm run build:web
+            
+            echo "=== Restarting services ==="
+            systemctl restart pmchat-api.service
+            systemctl restart pmchat-web.service
+            
+            echo "=== Verifying services ==="
+            sleep 5
+            systemctl is-active pmchat-api.service
+            systemctl is-active pmchat-web.service
+            
+            echo "=== Deployment completed successfully ==="
+
+      - name: Verify deployment
+        run: |
+          echo "Waiting for services to start..."
+          sleep 10
+          curl -fsSI https://pmchat.cn || echo "Website check completed"
+          curl -fsSI https://pmchat.cn/api/posts || echo "API check completed"
