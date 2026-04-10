@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - PM社区</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <a href="index.html" class="logo">
+            <i class="fas fa-layer-group"></i>
+            <span>PM社区</span>
+        </a>
+        
+        <h1>创建账号</h1>
+        <p class="subtitle">加入PM社区，与优秀的产品经理一起成长</p>
+
+        <!-- 注册步骤 -->
+        <div class="step-indicator" style="display: flex; justify-content: center; margin-bottom: 32px;">
+            <div class="step active" id="step1" style="display: flex; align-items: center;">
+                <div class="step-number" style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600;">1</div>
+                <span style="margin-left: 8px; font-weight: 500; color: var(--primary);">填写信息</span>
+            </div>
+            <div style="width: 60px; height: 2px; background: var(--border); margin: 0 12px;"></div>
+            <div class="step" id="step2" style="display: flex; align-items: center;">
+                <div class="step-number" style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-tertiary); color: var(--text-tertiary); display: flex; align-items: center; justify-content: center; font-weight: 600;">2</div>
+                <span style="margin-left: 8px; font-weight: 500; color: var(--text-tertiary);">完善资料</span>
+            </div>
+        </div>
+
+        <!-- 注册表单 -->
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <!-- 步骤1：基本信息 -->
+            <div id="step1Content">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> 昵称</label>
+                    <input type="text" placeholder="请输入昵称（2-20个字符）" required id="registerNickname" minlength="2" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-venus-mars"></i> 性别</label>
+                    <div style="display: flex; gap: 12px;">
+                        <label class="checkbox" style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition);">
+                            <input type="radio" name="gender" value="male" style="width: auto;">
+                            <span><i class="fas fa-mars" style="margin-right: 6px;"></i>男</span>
+                        </label>
+                        <label class="checkbox" style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition);">
+                            <input type="radio" name="gender" value="female" style="width: auto;">
+                            <span><i class="fas fa-venus" style="margin-right: 6px;"></i>女</span>
+                        </label>
+                        <label class="checkbox" style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition);">
+                            <input type="radio" name="gender" value="secret" checked style="width: auto;">
+                            <span><i class="fas fa-lock" style="margin-right: 6px;"></i>保密</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> 邮箱</label>
+                    <input type="email" placeholder="请输入邮箱" required id="registerEmail">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-mobile-alt"></i> 手机号（可选）</label>
+                    <input type="tel" placeholder="请输入手机号" id="registerPhone">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> 密码</label>
+                    <div style="position: relative;">
+                        <input type="password" placeholder="请设置密码（8位以上）" required id="registerPassword" minlength="8" style="padding-right: 44px;" oninput="checkPasswordStrength()">
+                        <button type="button" onclick="toggleRegisterPassword()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: none; background: none; color: var(--text-tertiary); cursor: pointer;">
+                            <i class="fas fa-eye" id="registerPasswordIcon"></i>
+                        </button>
+                    </div>
+                    <!-- 密码强度 -->
+                    <div style="margin-top: 8px;">
+                        <div style="display: flex; gap: 4px; margin-bottom: 4px;">
+                            <div id="strength1" style="flex: 1; height: 4px; background: var(--border); border-radius: 2px;"></div>
+                            <div id="strength2" style="flex: 1; height: 4px; background: var(--border); border-radius: 2px;"></div>
+                            <div id="strength3" style="flex: 1; height: 4px; background: var(--border); border-radius: 2px;"></div>
+                            <div id="strength4" style="flex: 1; height: 4px; background: var(--border); border-radius: 2px;"></div>
+                        </div>
+                        <span id="strengthText" style="font-size: 12px; color: var(--text-tertiary);">密码强度：弱</span>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-block" onclick="goToStep2()">
+                    下一步：完善资料 <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- 步骤2：完善资料 -->
+            <div id="step2Content" style="display: none;">
+                <div class="form-group">
+                    <label><i class="fas fa-briefcase"></i> 职业身份</label>
+                    <select required id="registerRole">
+                        <option value="">请选择职业身份</option>
+                        <option value="pm_junior">产品经理（1-3年）</option>
+                        <option value="pm_middle">产品经理（3-5年）</option>
+                        <option value="pm_senior">高级产品经理</option>
+                        <option value="pm_leader">产品总监/负责人</option>
+                        <option value="product_owner">产品负责人/Owner</option>
+                        <option value="ux">产品设计师/UX</option>
+                        <option value="developer">技术开发</option>
+                        <option value="student">学生/应届生</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-building"></i> 公司行业</label>
+                    <select id="registerIndustry">
+                        <option value="">请选择公司行业</option>
+                        <option value="internet">互联网/软件</option>
+                        <option value="e-commerce">电商</option>
+                        <option value="finance">金融科技</option>
+                        <option value="education">教育培训</option>
+                        <option value="healthcare">医疗健康</option>
+                        <option value="enterprise">企业服务/SaaS</option>
+                        <option value="game">游戏</option>
+                        <option value="media">内容/媒体</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> 工作年限</label>
+                    <select id="registerExperience">
+                        <option value="">请选择工作年限</option>
+                        <option value="0-1">1年以下</option>
+                        <option value="1-3">1-3年</option>
+                        <option value="3-5">3-5年</option>
+                        <option value="5-10">5-10年</option>
+                        <option value="10+">10年以上</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-star"></i> 感兴趣的领域（可多选）</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                        <label class="checkbox" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius-full); cursor: pointer; transition: var(--transition); font-size: 14px;">
+                            <input type="checkbox" name="interests" value="c" style="width: auto;">
+                            <span>C端产品</span>
+                        </label>
+                        <label class="checkbox" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius-full); cursor: pointer; transition: var(--transition); font-size: 14px;">
+                            <input type="checkbox" name="interests" value="b" style="width: auto;">
+                            <span>B端产品</span>
+                        </label>
+                        <label class="checkbox" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius-full); cursor: pointer; transition: var(--transition); font-size: 14px;">
+                            <input type="checkbox" name="interests" value="ai" style="width: auto;">
+                            <span>AI/大数据</span>
+                        </label>
+                        <label class="checkbox" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius-full); cursor: pointer; transition: var(--transition); font-size: 14px;">
+                            <input type="checkbox" name="interests" value="growth" style="width: auto;">
+                            <span>用户增长</span>
+                        </label>
+                        <label class="checkbox" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius-full); cursor: pointer; transition: var(--transition); font-size: 14px;">
+                            <input type="checkbox" name="interests" value="strategy" style="width: auto;">
+                            <span>策略产品</span>
+                        </label>
+                        <label class="checkbox" style="padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius-full); cursor: pointer; transition: var(--transition); font-size: 14px;">
+                            <input type="checkbox" name="interests" value="operation" style="width: auto;">
+                            <span>产品运营</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-pen"></i> 个人简介</label>
+                    <textarea placeholder="介绍一下自己吧，让大家更好地认识你（选填）" id="registerBio" rows="3" style="resize: vertical; min-height: 80px;"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" class="btn btn-secondary" onclick="goToStep1()" style="flex: 1;">
+                        <i class="fas fa-arrow-left"></i> 返回
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="flex: 2;" id="registerBtn">
+                        <span id="registerBtnText">完成注册</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- 第三方登录 -->
+        <div class="auth-divider" style="margin-top: 24px;"><span>或</span></div>
+        <div class="social-login">
+            <button class="social-btn" title="GitHub登录" onclick="handleSocialLogin('github')">
+                <i class="fab fa-github"></i>
+            </button>
+            <button class="social-btn" title="微信登录" onclick="handleSocialLogin('wechat')">
+                <i class="fab fa-weixin"></i>
+            </button>
+            <button class="social-btn" title="钉钉登录" onclick="handleSocialLogin('dingtalk')">
+                <i class="fab fa-dingding"></i>
+            </button>
+        </div>
+
+        <!-- 登录链接 -->
+        <p class="register-link" style="text-align: center; margin-top: 24px; color: var(--text-secondary);">
+            已有账号？<a href="login.html" style="color: var(--primary); font-weight: 600;">立即登录</a>
+        </p>
+    </div>
+
+    <div class="toast success" id="toast" style="display:none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">操作成功</span>
+    </div>
+
+    <script src="js/app.js"></script>
+    <style>
+        /* 额外样式 */
+        .checkbox input:checked + span {
+            color: var(--primary);
+        }
+        .checkbox:has(input:checked) {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+    </style>
+    <script>
+        // 步骤切换
+        function goToStep2() {
+            const nickname = document.getElementById('registerNickname').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (nickname.length < 2) {
+                showToast('昵称至少需要2个字符', 'error');
+                return;
+            }
+            if (!email) {
+                showToast('请输入邮箱', 'error');
+                return;
+            }
+            if (password.length < 8) {
+                showToast('密码至少需要8个字符', 'error');
+                return;
+            }
+
+            // 切换到步骤2
+            document.getElementById('step1Content').style.display = 'none';
+            document.getElementById('step2Content').style.display = 'block';
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step1').querySelector('.step-number').style.background = 'var(--success)';
+            document.getElementById('step1').querySelector('span').style.color = 'var(--success)';
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('step2').querySelector('.step-number').style.background = 'var(--primary)';
+            document.getElementById('step2').querySelector('span').style.color = 'var(--primary)';
+        }
+
+        function goToStep1() {
+            document.getElementById('step1Content').style.display = 'block';
+            document.getElementById('step2Content').style.display = 'none';
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step1').querySelector('.step-number').style.background = 'var(--primary)';
+            document.getElementById('step1').querySelector('span').style.color = 'var(--primary)';
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step2').querySelector('.step-number').style.background = 'var(--bg-tertiary)';
+            document.getElementById('step2').querySelector('span').style.color = 'var(--text-tertiary)';
+        }
+
+        // 密码强度检查
+        function checkPasswordStrength() {
+            const password = document.getElementById('registerPassword').value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+
+            const colors = ['var(--danger)', 'var(--warning)', 'var(--primary)', 'var(--success)'];
+            const texts = ['弱', '中等', '良好', '强'];
+            const strengthText = document.getElementById('strengthText');
+
+            for (let i = 1; i <= 4; i++) {
+                const el = document.getElementById('strength' + i);
+                if (i <= strength) {
+                    el.style.background = colors[strength - 1];
+                } else {
+                    el.style.background = 'var(--border)';
+                }
+            }
+
+            if (password.length > 0) {
+                strengthText.textContent = '密码强度：' + texts[strength - 1] || '未知';
+                strengthText.style.color = colors[strength - 1] || 'var(--text-tertiary)';
+            } else {
+                strengthText.textContent = '密码强度：弱';
+                strengthText.style.color = 'var(--text-tertiary)';
+            }
+        }
+
+        // 切换密码可见性
+        function toggleRegisterPassword() {
+            const passwordInput = document.getElementById('registerPassword');
+            const icon = document.getElementById('registerPasswordIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // 处理注册
+        function handleRegister(e) {
+            const btn = document.getElementById('registerBtn');
+            const btnText = document.getElementById('registerBtnText');
+            btn.disabled = true;
+            btnText.textContent = '注册中...';
+
+            setTimeout(() => {
+                handleDemoRegister(e);
+                btn.disabled = false;
+                btnText.textContent = '完成注册';
+            }, 600);
+        }
+
+        // 第三方登录
+        function handleSocialLogin(platform) {
+            showToast(platform + '登录功能即将开放', 'info');
+        }
+    </script>
+</body>
+</html>

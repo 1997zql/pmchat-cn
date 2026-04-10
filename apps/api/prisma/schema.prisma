@@ -1,0 +1,239 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  MUTED
+  BANNED
+  PENDING_DELETION
+}
+
+enum UserRole {
+  GUEST
+  USER
+  VERIFIED
+  ADMIN
+}
+
+enum PostType {
+  ARTICLE
+  QUESTION
+  DISCUSSION
+}
+
+enum PostStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  OFFLINE
+  DELETED
+}
+
+enum CommentStatus {
+  PUBLISHED
+  PENDING_REVIEW
+  HIDDEN
+  DELETED
+}
+
+enum ReportStatus {
+  PENDING
+  IN_PROGRESS
+  REJECTED
+  PUNISHED
+  CLOSED
+}
+
+enum NotificationType {
+  LIKE
+  COMMENT
+  FOLLOW
+  SYSTEM
+  REVIEW
+}
+
+enum ChatMessageStatus {
+  SENDING
+  DELIVERED
+  RECALLED
+  HIDDEN
+}
+
+model User {
+  id             String          @id @default(cuid())
+  email          String          @unique
+  nickname       String
+  passwordHash   String
+  role           UserRole        @default(USER)
+  status         UserStatus      @default(ACTIVE)
+  bio            String?
+  avatarUrl      String?
+  title          String?
+  company        String?
+  yearsOfExp     String?
+  interests      String[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  posts          Post[]
+  comments       Comment[]
+  sentReports    Report[]        @relation("Reporter")
+  handledReports Report[]        @relation("ReportHandler")
+  notifications  Notification[]
+  sessions       Session[]
+  chatMessages   ChatMessage[]
+  followers      Follow[]        @relation("UserFollowers")
+  following      Follow[]        @relation("UserFollowing")
+  favorites      Favorite[]
+  likes          PostLike[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  refreshToken String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  description String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  posts     Post[]
+}
+
+model Post {
+  id           String       @id @default(cuid())
+  authorId     String
+  categoryId   String
+  title        String
+  excerpt      String?
+  content      String
+  type         PostType
+  status       PostStatus   @default(PUBLISHED)
+  tags         String[]
+  coverUrl     String?
+  viewCount    Int          @default(0)
+  likeCount    Int          @default(0)
+  favoriteCount Int         @default(0)
+  reviewReason  String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  author       User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category     Category     @relation(fields: [categoryId], references: [id])
+  comments     Comment[]
+  reports      Report[]
+  favorites    Favorite[]
+  likes        PostLike[]
+}
+
+model Comment {
+  id         String        @id @default(cuid())
+  postId     String
+  authorId   String
+  parentId   String?
+  content    String
+  status     CommentStatus @default(PUBLISHED)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  post       Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author     User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent     Comment?      @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    Comment[]     @relation("CommentReplies")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  title     String
+  content   String
+  type      NotificationType
+  link      String?
+  entityId  String?
+  entityType String?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChatChannel {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  description String?
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  messages    ChatMessage[]
+}
+
+model ChatMessage {
+  id         String            @id @default(cuid())
+  channelId  String
+  authorId   String
+  content    String
+  status     ChatMessageStatus @default(DELIVERED)
+  createdAt  DateTime          @default(now())
+  channel    ChatChannel       @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author     User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id          String       @id @default(cuid())
+  reporterId  String
+  postId      String?
+  targetType  String?
+  targetId    String?
+  reason      String
+  detail      String?
+  handleNote  String?
+  handledById String?
+  status      ReportStatus @default(PENDING)
+  createdAt   DateTime     @default(now())
+  reporter    User         @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  handledBy   User?        @relation("ReportHandler", fields: [handledById], references: [id], onDelete: SetNull)
+  post        Post?        @relation(fields: [postId], references: [id], onDelete: SetNull)
+}
+
+model Follow {
+  id           String   @id @default(cuid())
+  followerId   String
+  followingId  String
+  createdAt    DateTime @default(now())
+  follower     User     @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following    User     @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model PostLike {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}

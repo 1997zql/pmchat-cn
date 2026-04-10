@@ -1,0 +1,15 @@
+[Unit]
+Description=PMChat API
+After=network.target docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/pmchat
+EnvironmentFile=/srv/pmchat/.env
+Environment=API_HOST=127.0.0.1
+ExecStart=/usr/bin/env npm run start:api
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

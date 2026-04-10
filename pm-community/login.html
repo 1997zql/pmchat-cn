@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - PM社区</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <a href="index.html" class="logo">
+            <i class="fas fa-layer-group"></i>
+            <span>PM社区</span>
+        </a>
+        
+        <h1>欢迎回来</h1>
+        <p class="subtitle">登录PM社区，开启产品经理之旅</p>
+
+        <!-- 登录方式切换 -->
+        <div class="content-tabs" style="margin-bottom: 24px; background: var(--bg-tertiary);">
+            <button class="tab-btn active" id="tabPassword" onclick="switchLoginTab('password')">密码登录</button>
+            <button class="tab-btn" id="tabSMS" onclick="switchLoginTab('sms')">验证码登录</button>
+        </div>
+
+        <!-- 密码登录表单 -->
+        <form id="passwordForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> 账号</label>
+                <input type="text" placeholder="请输入邮箱或手机号" required id="loginAccount">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> 密码</label>
+                <div style="position: relative;">
+                    <input type="password" placeholder="请输入密码" required id="loginPassword" style="padding-right: 44px;">
+                    <button type="button" onclick="togglePassword()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: none; background: none; color: var(--text-tertiary); cursor: pointer;">
+                        <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="form-row">
+                <label class="checkbox">
+                    <input type="checkbox" checked>
+                    <span>记住我</span>
+                </label>
+                <a href="#" class="forgot-link" onclick="showToast('跳转到找回密码页面', 'info')">忘记密码？</a>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+                <span id="loginBtnText">登 录</span>
+            </button>
+        </form>
+
+        <!-- 验证码登录表单 -->
+        <form id="smsForm" style="display: none;" onsubmit="handleSMSLogin(event)">
+            <div class="form-group">
+                <label><i class="fas fa-mobile-alt"></i> 手机号</label>
+                <input type="tel" placeholder="请输入手机号" required id="loginPhone">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-shield-alt"></i> 验证码</label>
+                <div style="display: flex; gap: 12px;">
+                    <input type="text" placeholder="请输入验证码" required id="loginCode" style="flex: 1;">
+                    <button type="button" class="btn btn-secondary" id="sendCodeBtn" onclick="sendCode()" style="padding: 12px 16px; white-space: nowrap;">
+                        获取验证码
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="smsLoginBtn">
+                <span id="smsLoginBtnText">验证并登录</span>
+            </button>
+        </form>
+
+        <!-- 其他登录方式 -->
+        <div class="auth-divider"><span>或</span></div>
+        <div class="social-login">
+            <button class="social-btn" title="GitHub登录" onclick="handleSocialLogin('github')">
+                <i class="fab fa-github"></i>
+            </button>
+            <button class="social-btn" title="微信登录" onclick="handleSocialLogin('wechat')">
+                <i class="fab fa-weixin"></i>
+            </button>
+            <button class="social-btn" title="钉钉登录" onclick="handleSocialLogin('dingtalk')">
+                <i class="fab fa-dingding"></i>
+            </button>
+        </div>
+
+        <!-- 注册链接 -->
+        <p class="register-link" style="text-align: center; margin-top: 24px; color: var(--text-secondary);">
+            还没有账号？<a href="register.html" style="color: var(--primary); font-weight: 600;">立即注册</a>
+        </p>
+
+        <!-- 用户协议 -->
+        <p style="text-align: center; margin-top: 16px; font-size: 12px; color: var(--text-tertiary);">
+            登录即表示同意
+            <a href="#" onclick="showToast('查看用户协议', 'info')" style="color: var(--primary);">《用户协议》</a>
+            和
+            <a href="#" onclick="showToast('查看隐私政策', 'info')" style="color: var(--primary);">《隐私政策》</a>
+        </p>
+    </div>
+
+    <!-- 微信扫码弹窗 -->
+    <div class="modal" id="wechatModal">
+        <div class="modal-content" style="width: 320px; text-align: center;">
+            <button class="modal-close" onclick="hideModal('wechatModal')">&times;</button>
+            <div class="modal-header">
+                <h2>微信扫码登录</h2>
+                <p style="font-size: 14px; color: var(--text-secondary); margin-top: 8px;">请使用微信扫描下方二维码</p>
+            </div>
+            <div style="background: var(--bg-tertiary); padding: 24px; border-radius: var(--radius-md); margin: 20px 0;">
+                <div style="width: 180px; height: 180px; margin: 0 auto; background: white; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm);">
+                    <div style="text-align: center; color: var(--text-tertiary);">
+                        <i class="fab fa-weixin" style="font-size: 64px; color: #07c160;"></i>
+                        <p style="margin-top: 8px; font-size: 12px;">模拟二维码</p>
+                    </div>
+                </div>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary);">
+                <i class="fas fa-exclamation-circle" style="color: var(--warning); margin-right: 6px;"></i>
+                请在手机上确认登录
+            </p>
+        </div>
+    </div>
+
+    <div class="toast success" id="toast" style="display:none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">操作成功</span>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // 切换登录方式
+        function switchLoginTab(tab) {
+            const passwordForm = document.getElementById('passwordForm');
+            const smsForm = document.getElementById('smsForm');
+            const tabPassword = document.getElementById('tabPassword');
+            const tabSMS = document.getElementById('tabSMS');
+
+            if (tab === 'password') {
+                passwordForm.style.display = 'block';
+                smsForm.style.display = 'none';
+                tabPassword.classList.add('active');
+                tabSMS.classList.remove('active');
+            } else {
+                passwordForm.style.display = 'none';
+                smsForm.style.display = 'block';
+                tabPassword.classList.remove('active');
+                tabSMS.classList.add('active');
+            }
+        }
+
+        // 切换密码可见性
+        function togglePassword() {
+            const passwordInput = document.getElementById('loginPassword');
+            const icon = document.getElementById('passwordToggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // 发送验证码
+        let countdown = 0;
+        function sendCode() {
+            const phone = document.getElementById('loginPhone').value;
+            const btn = document.getElementById('sendCodeBtn');
+            
+            if (!phone || phone.length !== 11) {
+                showToast('请输入正确的手机号', 'error');
+                return;
+            }
+
+            if (countdown > 0) return;
+
+            // 模拟发送验证码
+            showToast('验证码已发送', 'success');
+            countdown = 60;
+            btn.disabled = true;
+
+            const timer = setInterval(() => {
+                countdown--;
+                btn.textContent = countdown + 's';
+                
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    btn.textContent = '获取验证码';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        // 处理登录
+        function handleLogin(e) {
+            const btn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('loginBtnText');
+            btn.disabled = true;
+            btnText.textContent = '登录中...';
+            setTimeout(() => {
+                handleDemoLogin(e);
+                btn.disabled = false;
+                btnText.textContent = '登 录';
+            }, 500);
+        }
+
+        // 处理验证码登录
+        function handleSMSLogin(e) {
+            const btn = document.getElementById('smsLoginBtn');
+            const btnText = document.getElementById('smsLoginBtnText');
+            btn.disabled = true;
+            btnText.textContent = '验证中...';
+            setTimeout(() => {
+                handleDemoLogin(e);
+                btn.disabled = false;
+                btnText.textContent = '验证并登录';
+            }, 500);
+        }
+
+        // 处理第三方登录
+        function handleSocialLogin(platform) {
+            if (platform === 'wechat') {
+                showModal('wechatModal');
+            } else {
+                showToast(platform + '登录功能即将开放', 'info');
+            }
+        }
+    </script>
+</body>
+</html>

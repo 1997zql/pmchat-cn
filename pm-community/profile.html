@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页 - PM社区</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo"><i class="fas fa-layer-group"></i><span>PM社区</span></a>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-item"><i class="fas fa-home"></i>首页</a>
+                <a href="categories.html" class="nav-item"><i class="fas fa-th-large"></i>分类</a>
+                <a href="chat.html" class="nav-item"><i class="fas fa-comments"></i>闲聊</a>
+                <a href="tools.html" class="nav-item"><i class="fas fa-tools"></i>工具箱</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="搜索..."></div>
+            <button class="btn btn-primary" onclick="location.href='create.html'"><i class="fas fa-plus"></i>发布</button>
+            <div class="user-menu">
+                <div class="notification-badge"><i class="fas fa-bell"></i><span class="badge">3</span></div>
+                <div class="avatar" onclick="location.href='profile.html'" style="border-color: var(--primary);"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt=""></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container no-sidebar">
+        <!-- 用户信息卡片 -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div style="display: flex; gap: 32px; align-items: center; position: relative;">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--border); flex-shrink: 0;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <h1 style="font-size: 28px; margin: 0;">张小明</h1>
+                        <span style="padding: 4px 10px; background: var(--primary); color: white; border-radius: var(--radius-full); font-size: 12px;">
+                            <i class="fas fa-check-circle" style="margin-right: 4px;"></i>认证产品经理
+                        </span>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">
+                        <i class="fas fa-briefcase" style="margin-right: 6px;"></i>高级产品经理 · 字节跳动 · 5年经验
+                    </p>
+                    <p style="color: var(--text-tertiary); margin-bottom: 16px;">
+                        <i class="fas fa-star" style="margin-right: 6px;"></i>专注用户增长与AI产品方向，热爱产品设计，相信好的产品能改变世界。
+                    </p>
+                    <div style="display: flex; gap: 24px;">
+                        <div style="text-align: center; cursor: pointer;" onclick="switchProfileTab(document.querySelectorAll('.profile-tab')[3], 'followers')">
+                            <div style="font-size: 24px; font-weight: 700;">1,234</div>
+                            <div style="font-size: 13px; color: var(--text-tertiary);">获赞</div>
+                        </div>
+                        <div style="text-align: center; cursor: pointer;" onclick="switchProfileTab(document.querySelectorAll('.profile-tab')[3], 'followers')">
+                            <div style="font-size: 24px; font-weight: 700;">856</div>
+                            <div style="font-size: 13px; color: var(--text-tertiary);">粉丝</div>
+                        </div>
+                        <div style="text-align: center; cursor: pointer;" onclick="switchProfileTab(document.querySelectorAll('.profile-tab')[4], 'following')">
+                            <div style="font-size: 24px; font-weight: 700;">128</div>
+                            <div style="font-size: 13px; color: var(--text-tertiary);">关注</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700;">45</div>
+                            <div style="font-size: 13px; color: var(--text-tertiary);">文章</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <button class="btn btn-primary" onclick="toggleFollow(this)"><i class="fas fa-plus"></i>关注</button>
+                    <button class="btn btn-secondary" onclick="showToast('私信功能即将开放', 'info')"><i class="fas fa-envelope"></i>私信</button>
+                    <button class="btn btn-secondary" onclick="location.href='settings.html'"><i class="fas fa-cog"></i>设置</button>
+                </div>
+            </div>
+
+            <!-- 个人标签 -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; gap: 12px; flex-wrap: wrap;">
+                <span class="mini-tag" style="background: var(--primary); color: white; padding: 6px 14px; border-radius: var(--radius-full); font-size: 13px;">#用户增长</span>
+                <span class="mini-tag" style="background: var(--primary); color: white; padding: 6px 14px; border-radius: var(--radius-full); font-size: 13px;">#AI产品</span>
+                <span class="mini-tag" style="background: var(--bg-tertiary); padding: 6px 14px; border-radius: var(--radius-full); font-size: 13px;">#数据分析</span>
+                <span class="mini-tag" style="background: var(--bg-tertiary); padding: 6px 14px; border-radius: var(--radius-full); font-size: 13px;">#PRD写作</span>
+                <span class="mini-tag" style="background: var(--bg-tertiary); padding: 6px 14px; border-radius: var(--radius-full); font-size: 13px;">#Axure</span>
+            </div>
+        </div>
+
+        <!-- 标签页 -->
+        <div class="content-tabs" style="margin-bottom: 24px;">
+            <button class="tab-btn active" onclick="switchProfileTab(this, 'articles')">
+                <i class="fas fa-newspaper"></i> 文章 (45)
+            </button>
+            <button class="tab-btn" onclick="switchProfileTab(this, 'questions')">
+                <i class="fas fa-question-circle"></i> 问答 (12)
+            </button>
+            <button class="tab-btn" onclick="switchProfileTab(this, 'discussions')">
+                <i class="fas fa-comments"></i> 讨论 (23)
+            </button>
+            <button class="tab-btn" onclick="switchProfileTab(this, 'collections')">
+                <i class="far fa-bookmark"></i> 收藏 (89)
+            </button>
+            <button class="tab-btn" onclick="switchProfileTab(this, 'followers')">
+                <i class="fas fa-users"></i> 粉丝
+            </button>
+            <button class="tab-btn" onclick="switchProfileTab(this, 'following')">
+                <i class="fas fa-user-plus"></i> 关注
+            </button>
+        </div>
+
+        <!-- 文章列表 -->
+        <div id="articlesContent" class="tab-content">
+            <article class="post-card" onclick="location.href='detail.html'">
+                <div class="post-header">
+                    <span class="category-badge badge-design">C端产品</span>
+                    <span class="post-meta" style="margin-left: auto;">发布于 2小时前</span>
+                </div>
+                <h2 class="post-title">如何通过A/B测试优化产品转化率</h2>
+                <p class="post-excerpt">A/B测试是产品优化的重要手段，本文详细介绍如何设计A/B测试实验，从假设建立到结果分析的全流程...</p>
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <button class="action-btn like-btn" onclick="event.stopPropagation();toggleLike(this)"><i class="far fa-thumbs-up"></i> 234</button>
+                        <button class="action-btn"><i class="far fa-comment"></i> 45</button>
+                        <button class="action-btn"><i class="far fa-eye"></i> 1.2k</button>
+                    </div>
+                    <div class="post-tags">
+                        <span class="mini-tag">#A/B测试</span>
+                        <span class="mini-tag">#转化优化</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="post-card" onclick="location.href='detail.html'">
+                <div class="post-header">
+                    <span class="category-badge badge-growth">用户增长</span>
+                    <span class="post-meta" style="margin-left: auto;">发布于 1天前</span>
+                </div>
+                <h2 class="post-title">用户增长团队的KPI制定与拆解方法论</h2>
+                <p class="post-excerpt">增长黑客的概念火了这么多年，但真正能把增长方法论落地的团队少之又少。本文分享我们团队在KPI制定方面的经验...</p>
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <button class="action-btn like-btn" onclick="event.stopPropagation();toggleLike(this)"><i class="far fa-thumbs-up"></i> 412</button>
+                        <button class="action-btn"><i class="far fa-comment"></i> 89</button>
+                        <button class="action-btn"><i class="far fa-eye"></i> 3.5k</button>
+                    </div>
+                    <div class="post-tags">
+                        <span class="mini-tag">#用户增长</span>
+                        <span class="mini-tag">#KPI</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="post-card" onclick="location.href='detail.html'">
+                <div class="post-header">
+                    <span class="category-badge badge-ai">AI/大数据</span>
+                    <span class="post-meta" style="margin-left: auto;">发布于 3天前</span>
+                </div>
+                <h2 class="post-title">推荐系统冷启动问题解决方案</h2>
+                <p class="post-excerpt">新用户/新内容的冷启动是推荐系统的核心挑战，本文介绍几种常用解决方案，包括基于热门内容、社交网络和知识图谱的方法...</p>
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <button class="action-btn like-btn" onclick="event.stopPropagation();toggleLike(this)"><i class="far fa-thumbs-up"></i> 178</button>
+                        <button class="action-btn"><i class="far fa-comment"></i> 34</button>
+                        <button class="action-btn"><i class="far fa-eye"></i> 2.1k</button>
+                    </div>
+                    <div class="post-tags">
+                        <span class="mini-tag">#推荐系统</span>
+                        <span class="mini-tag">#AI</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- 问答列表 -->
+        <div id="questionsContent" class="tab-content" style="display: none;">
+            <div class="question-card" onclick="location.href='detail.html'">
+                <div class="question-header">
+                    <span class="question-status resolved">已解决</span>
+                    <span class="post-meta" style="margin-left: auto;">发布于 5小时前</span>
+                </div>
+                <h2 class="post-title">如何评估一个需求的价值和优先级？</h2>
+                <p class="post-excerpt">作为产品经理，经常需要面对大量需求，如何科学地评估需求价值和优先级是个难题。</p>
+                <div class="question-stats">
+                    <span class="question-stat"><i class="far fa-thumbs-up"></i> 45</span>
+                    <span class="question-stat"><i class="far fa-comment"></i> 12 个回答</span>
+                    <span class="question-stat"><i class="far fa-eye"></i> 1.2k</span>
+                </div>
+            </div>
+
+            <div class="question-card" onclick="location.href='detail.html'">
+                <div class="question-header">
+                    <span class="question-status pending">待回答</span>
+                    <span class="post-meta" style="margin-left: auto;">发布于 1天前</span>
+                </div>
+                <h2 class="post-title">B端产品和C端产品在需求分析上有什么区别？</h2>
+                <p class="post-excerpt">最近要从C端转向B端，想了解一下两者在需求分析方法和流程上有什么不同。</p>
+                <div class="question-stats">
+                    <span class="question-stat"><i class="far fa-thumbs-up"></i> 32</span>
+                    <span class="question-stat"><i class="far fa-comment"></i> 8 个回答</span>
+                    <span class="question-stat"><i class="far fa-eye"></i> 856</span>
+                </div>
+            </div>
+
+            <div class="question-card" onclick="location.href='detail.html'">
+                <div class="question-header">
+                    <span class="question-status resolved">已解决</span>
+                    <span class="post-meta" style="margin-left: auto;">发布于 2天前</span>
+                </div>
+                <h2 class="post-title">如何写好一个需求文档？有什么模板推荐吗？</h2>
+                <p class="post-excerpt">刚转行做产品经理，PRD写作是个大难题，有没有好的模板可以参考？</p>
+                <div class="question-stats">
+                    <span class="question-stat"><i class="far fa-thumbs-up"></i> 89</span>
+                    <span class="question-stat"><i class="far fa-comment"></i> 23 个回答</span>
+                    <span class="question-stat"><i class="far fa-eye"></i> 2.3k</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 收藏列表 -->
+        <div id="collectionsContent" class="tab-content" style="display: none;">
+            <article class="post-card" onclick="location.href='detail.html'">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                    <i class="fas fa-bookmark" style="color: var(--primary);"></i>
+                    <span style="font-size: 13px; color: var(--text-tertiary);">收藏于 1天前</span>
+                </div>
+                <h2 class="post-title">AI时代，产品经理的不可替代性在哪里？</h2>
+                <p class="post-excerpt">很多人担心AI会取代产品经理，但我认为PM的核心价值在于：用户洞察、商业判断、组织协调等...</p>
+            </article>
+
+            <article class="post-card" onclick="location.href='detail.html'">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                    <i class="fas fa-bookmark" style="color: var(--primary);"></i>
+                    <span style="font-size: 13px; color: var(--text-tertiary);">收藏于 3天前</span>
+                </div>
+                <h2 class="post-title">B端后台设计：如何平衡功能性与美观性</h2>
+                <p class="post-excerpt">很多B端产品经理都会遇到这个问题：业务方要功能，领导要美观，其实这两者并不冲突...</p>
+            </article>
+        </div>
+
+        <!-- 粉丝列表 -->
+        <div id="followersContent" class="tab-content" style="display: none;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alice" alt="" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; margin-bottom: 4px;">李明轩</h4>
+                    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">C端产品经理 · 粉丝 2.3k</p>
+                    <button class="btn-follow" onclick="toggleFollow(this)">关注</button>
+                </div>
+
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob" alt="" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; margin-bottom: 4px;">王雨晴</h4>
+                    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">B端产品专家 · 粉丝 1.8k</p>
+                    <button class="btn-follow followed" onclick="toggleFollow(this)">已关注</button>
+                </div>
+
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Carol" alt="" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; margin-bottom: 4px;">张晓东</h4>
+                    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">增长负责人 · 粉丝 1.2k</p>
+                    <button class="btn-follow" onclick="toggleFollow(this)">关注</button>
+                </div>
+
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Dan" alt="" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; margin-bottom: 4px;">陈小明</h4>
+                    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">AI研究员 · 粉丝 956</p>
+                    <button class="btn-follow" onclick="toggleFollow(this)">关注</button>
+                </div>
+
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Eve" alt="" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; margin-bottom: 4px;">刘芳芳</h4>
+                    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">高级产品经理 · 粉丝 1.5k</p>
+                    <button class="btn-follow" onclick="toggleFollow(this)">关注</button>
+                </div>
+
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Frank" alt="" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; margin-bottom: 4px;">周伟</h4>
+                    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">产品设计师 · 粉丝 789</p>
+                    <button class="btn-follow" onclick="toggleFollow(this)">关注</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 关注列表 -->
+        <div id="followingContent" class="tab-content" style="display: none;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alice" alt="" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; margin-bottom: 4px;">李明轩</h4>
+                    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">C端产品经理</p>
+                    <button class="btn-follow followed" onclick="toggleFollow(this)">已关注</button>
+                </div>
+
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob" alt="" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; margin-bottom: 4px;">王雨晴</h4>
+                    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">B端产品专家</p>
+                    <button class="btn-follow followed" onclick="toggleFollow(this)">已关注</button>
+                </div>
+
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Grace" alt="" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; margin-bottom: 4px;">赵敏</h4>
+                    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px;">前阿里P9产品总监</p>
+                    <button class="btn-follow followed" onclick="toggleFollow(this)">已关注</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 讨论列表 -->
+        <div id="discussionsContent" class="tab-content" style="display: none;">
+            <div class="question-card" onclick="location.href='detail.html'">
+                <div class="question-header">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="" class="author-avatar">
+                    <div class="author-info">
+                        <span class="author-name">张小明</span>
+                        <span class="post-meta">发起讨论 · 1小时前</span>
+                    </div>
+                </div>
+                <h2 class="post-title">大家平时用什么工具画原型？</h2>
+                <p class="post-excerpt">想了解一下大家都用什么工具画原型，Axure、Figma还是其他？各有什么优缺点？</p>
+                <div class="question-stats">
+                    <span class="question-stat"><i class="far fa-comment"></i> 45 回复</span>
+                    <span class="question-stat"><i class="far fa-eye"></i> 1.8k</span>
+                </div>
+            </div>
+
+            <div class="question-card" onclick="location.href='detail.html'">
+                <div class="question-header">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="" class="author-avatar">
+                    <div class="author-info">
+                        <span class="author-name">张小明</span>
+                        <span class="post-meta">发起讨论 · 2天前</span>
+                    </div>
+                </div>
+                <h2 class="post-title">产品经理日常工作总结与复盘方法</h2>
+                <p class="post-excerpt">最近在整理自己的工作方法论，发现复盘是个很重要的环节。大家有什么好的复盘方法推荐吗？</p>
+                <div class="question-stats">
+                    <span class="question-stat"><i class="far fa-comment"></i> 23 回复</span>
+                    <span class="question-stat"><i class="far fa-eye"></i> 1.2k</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载更多 -->
+        <div style="text-align: center; padding: 40px;">
+            <button class="btn btn-secondary" onclick="loadMoreContent()">
+                <i class="fas fa-arrow-down"></i> 加载更多
+            </button>
+        </div>
+    </main>
+
+    <div class="toast success" id="toast" style="display:none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">操作成功</span>
+    </div>
+
+    <script src="js/app.js"></script>
+    <style>
+        .profile-tab {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .profile-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+        .profile-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        .tab-content {
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <script>
+        function switchProfileTab(btn, tab) {
+            // 更新按钮样式
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+
+            // 隐藏所有内容
+            const contents = ['articles', 'questions', 'discussions', 'collections', 'followers', 'following'];
+            contents.forEach(content => {
+                const el = document.getElementById(content + 'Content');
+                if (el) el.style.display = 'none';
+            });
+
+            // 显示选中的内容
+            const activeContent = document.getElementById(tab + 'Content');
+            if (activeContent) {
+                activeContent.style.display = 'block';
+            }
+
+            // 滚动到内容区
+            const contentElement = document.querySelector('.content-tabs');
+            if (contentElement) {
+                contentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function toggleFollow(btn) {
+            if (btn.classList.contains('followed')) {
+                btn.classList.remove('followed');
+                btn.textContent = '关注';
+                btn.style.background = 'transparent';
+                btn.style.color = 'var(--primary)';
+                showToast('已取消关注', 'info');
+            } else {
+                btn.classList.add('followed');
+                btn.textContent = '已关注';
+                btn.style.background = 'var(--primary)';
+                btn.style.color = 'white';
+                showToast('关注成功', 'success');
+            }
+        }
+
+        function loadMoreContent() {
+            showToast('正在加载更多内容...', 'info');
+            setTimeout(() => {
+                showToast('暂无更多内容', 'info');
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

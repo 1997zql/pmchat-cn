@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章详情 - PM社区</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo"><i class="fas fa-layer-group"></i><span>PM社区</span></a>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-item"><i class="fas fa-home"></i>首页</a>
+                <a href="categories.html" class="nav-item"><i class="fas fa-th-large"></i>分类</a>
+                <a href="chat.html" class="nav-item"><i class="fas fa-comments"></i>闲聊</a>
+                <a href="tools.html" class="nav-item"><i class="fas fa-tools"></i>工具箱</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" onclick="location.href='create.html'"><i class="fas fa-plus"></i>发布</button>
+            <div class="user-menu">
+                <div class="notification-badge"><i class="fas fa-bell"></i><span class="badge">3</span></div>
+                <div class="avatar" onclick="location.href='profile.html'"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt=""></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="detail-container">
+        <div class="detail-main">
+            <!-- 文章头部 -->
+            <div class="detail-header">
+                <div class="breadcrumb">
+                    <a href="index.html">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <a href="categories.html">AI/大数据</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span>文章详情</span>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <span class="category-badge badge-ai">AI/大数据</span>
+                    <span style="padding: 4px 12px; background: var(--bg-tertiary); border-radius: var(--radius-full); font-size: 12px; color: var(--text-secondary);">
+                        <i class="far fa-clock"></i> 阅读时长 8分钟
+                    </span>
+                </div>
+
+                <h1 class="detail-title">从0到1搭建AI产品经理能力模型的一些思考</h1>
+
+                <div class="detail-meta">
+                    <div class="detail-author">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alice" alt="" class="author-avatar">
+                        <div class="detail-author-info">
+                            <span class="name">李明轩</span>
+                            <span class="title">C端产品经理 · 3小时前</span>
+                        </div>
+                    </div>
+                    <button class="btn-follow" onclick="toggleFollow(this)">关注</button>
+                    <div class="detail-actions">
+                        <button class="action-btn" onclick="shareArticle()">
+                            <i class="fas fa-share-alt"></i> 分享
+                        </button>
+                        <button class="action-btn" onclick="reportArticle()">
+                            <i class="fas fa-flag"></i> 举报
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 文章内容 -->
+            <div class="detail-content">
+                <h2>背景</h2>
+                <p>最近在梳理团队能力框架，发现传统PM能力模型在AI时代需要重构。传统的产品经理能力模型主要侧重于需求分析、项目管理、用户研究等方面，但在AI时代，产品经理需要具备更多新的能力。</p>
+
+                <h2>AI产品经理的核心能力</h2>
+                <p>基于我的实践和观察，AI产品经理需要具备以下核心能力：</p>
+
+                <h3>1. 算法理解能力</h3>
+                <p>不需要成为算法专家，但需要理解主流算法的原理和应用场景。比如：</p>
+                <ul style="margin: 16px 0; padding-left: 24px;">
+                    <li style="margin-bottom: 8px;">机器学习基础：监督学习、无监督学习、强化学习</li>
+                    <li style="margin-bottom: 8px;">深度学习：CNN、RNN、Transformer</li>
+                    <li style="margin-bottom: 8px;">大语言模型：Prompt Engineering、RAG、Agent</li>
+                </ul>
+
+                <h3>2. 数据驱动能力</h3>
+                <p>AI产品的核心是数据。需要具备：</p>
+                <ul style="margin: 16px 0; padding-left: 24px;">
+                    <li style="margin-bottom: 8px;">数据采集和治理能力</li>
+                    <li style="margin-bottom: 8px;">数据分析和可视化</li>
+                    <li style="margin-bottom: 8px;">数据标注和质量管理</li>
+                </ul>
+
+                <h3>3. 伦理意识</h3>
+                <p>AI产品经理需要关注：</p>
+                <ul style="margin: 16px 0; padding-left: 24px;">
+                    <li style="margin-bottom: 8px;">隐私保护和合规</li>
+                    <li style="margin-bottom: 8px;">算法公平性和偏见</li>
+                    <li style="margin-bottom: 8px;">透明度和可解释性</li>
+                </ul>
+
+                <blockquote style="margin: 24px 0; padding: 16px 20px; background: var(--bg-tertiary); border-left: 4px solid var(--primary); border-radius: var(--radius-md);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin: 0;">"AI是工具，产品经理的核心价值在于洞察用户需求、定义产品方向，这些能力永远不会过时。"</p>
+                </blockquote>
+
+                <h2>如何提升</h2>
+                <p>推荐几个学习路径：</p>
+                <ol style="margin: 16px 0; padding-left: 24px;">
+                    <li style="margin-bottom: 12px;"><strong>系统学习</strong>：参加吴恩达的机器学习课程</li>
+                    <li style="margin-bottom: 12px;"><strong>实践项目</strong>：参与公司的AI项目，从0到1</li>
+                    <li style="margin-bottom: 12px;"><strong>行业交流</strong>：多和算法工程师、数据科学家交流</li>
+                </ol>
+
+                <h2>总结</h2>
+                <p>AI时代对产品经理提出了新的要求，但产品经理的核心价值依然存在。我们需要不断学习、拥抱变化，同时保持对用户的关注和对产品的热情。</p>
+            </div>
+
+            <!-- 文章标签 -->
+            <div class="detail-tags">
+                <span class="mini-tag">#AI产品经理</span>
+                <span class="mini-tag">#职业发展</span>
+                <span class="mini-tag">#能力模型</span>
+                <span class="mini-tag">#学习路径</span>
+            </div>
+
+            <!-- 点赞和互动 -->
+            <div style="display: flex; justify-content: center; gap: 16px; padding: 24px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 32px;">
+                <button class="btn btn-primary like-btn" onclick="toggleArticleLike(this)" style="padding: 12px 32px; font-size: 16px;">
+                    <i class="far fa-thumbs-up"></i> 点赞 (128)
+                </button>
+                <button class="btn btn-secondary" onclick="toggleArticleCollect()" style="padding: 12px 32px; font-size: 16px;" id="collectBtn">
+                    <i class="far fa-bookmark"></i> 收藏
+                </button>
+                <button class="btn btn-secondary" onclick="shareArticle()" style="padding: 12px 32px; font-size: 16px;">
+                    <i class="fas fa-share-alt"></i> 分享
+                </button>
+            </div>
+
+            <!-- 评论区域 -->
+            <div class="comment-section">
+                <h3 style="font-size: 20px; margin-bottom: 24px;">
+                    <i class="fas fa-comments" style="color: var(--primary); margin-right: 8px;"></i>
+                    评论 (45)
+                </h3>
+
+                <!-- 评论输入 -->
+                <div style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border);">
+                    <textarea id="commentInput" placeholder="写下你的评论..." rows="4" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 14px; resize: vertical; min-height: 100px; margin-bottom: 12px;"></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; gap: 8px;">
+                            <button class="action-btn" onclick="showToast('表情功能即将开放', 'info')" style="padding: 8px 12px;">
+                                <i class="far fa-smile"></i>
+                            </button>
+                            <button class="action-btn" onclick="showToast('@功能即将开放', 'info')" style="padding: 8px 12px;">
+                                <i class="fas fa-at"></i>
+                            </button>
+                        </div>
+                        <button class="btn btn-primary" onclick="submitComment()">
+                            <i class="fas fa-paper-plane"></i> 发布评论
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 评论列表 -->
+                <div id="commentList">
+                    <!-- 评论1 -->
+                    <div class="comment-item" style="display: flex; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--border);">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob" alt="" style="width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <span style="font-weight: 600;">王雨晴</span>
+                                <span style="padding: 2px 8px; background: var(--success); color: white; border-radius: var(--radius-full); font-size: 11px;">高级PM</span>
+                                <span style="font-size: 12px; color: var(--text-tertiary);">2小时前</span>
+                            </div>
+                            <p style="font-size: 14px; line-height: 1.7; color: var(--text-primary); margin-bottom: 12px;">写得很好！AI确实在改变产品经理的工作方式。我最近也在学习机器学习，感觉确实需要补很多基础知识。</p>
+                            <div style="display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary);">
+                                <button class="action-btn" style="padding: 4px 10px;" onclick="likeComment(this)">
+                                    <i class="far fa-thumbs-up"></i> 23
+                                </button>
+                                <button class="action-btn" style="padding: 4px 10px;" onclick="replyToComment('王雨晴')">
+                                    <i class="far fa-comment"></i> 回复
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 评论2 -->
+                    <div class="comment-item" style="display: flex; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--border);">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Carol" alt="" style="width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <span style="font-weight: 600;">张晓东</span>
+                                <span style="font-size: 12px; color: var(--text-tertiary);">3小时前</span>
+                            </div>
+                            <p style="font-size: 14px; line-height: 1.7; color: var(--text-primary); margin-bottom: 12px;">非常实用的总结！特别是伦理意识这块，确实是我们之前忽略的。建议可以深入讲讲如何做算法公平性评估。</p>
+                            <div style="display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary);">
+                                <button class="action-btn" style="padding: 4px 10px;" onclick="likeComment(this)">
+                                    <i class="far fa-thumbs-up"></i> 15
+                                </button>
+                                <button class="action-btn" style="padding: 4px 10px;" onclick="replyToComment('张晓东')">
+                                    <i class="far fa-comment"></i> 回复
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 评论3 - 回复 -->
+                    <div class="comment-item" style="display: flex; gap: 16px; padding: 20px 0 20px 60px; border-bottom: 1px solid var(--border);">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alice" alt="" style="width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <span style="font-weight: 600;">李明轩</span>
+                                <span style="padding: 2px 8px; background: var(--primary); color: white; border-radius: var(--radius-full); font-size: 11px;">作者</span>
+                                <span style="font-size: 12px; color: var(--text-tertiary);">3小时前</span>
+                            </div>
+                            <p style="font-size: 14px; line-height: 1.7; color: var(--text-primary); margin-bottom: 12px;">@张晓东 感谢建议！算法公平性确实是个大话题，后面可以单独写一篇展开讲讲。</p>
+                            <div style="display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary);">
+                                <button class="action-btn" style="padding: 4px 10px;" onclick="likeComment(this)">
+                                    <i class="far fa-thumbs-up"></i> 8
+                                </button>
+                                <button class="action-btn" style="padding: 4px 10px;" onclick="replyToComment('李明轩')">
+                                    <i class="far fa-comment"></i> 回复
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 加载更多 -->
+                <div style="text-align: center; padding: 24px 0;">
+                    <button class="btn btn-secondary" onclick="loadMoreComments()">
+                        <i class="fas fa-arrow-down"></i> 加载更多评论
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧边栏 -->
+        <aside class="detail-sidebar">
+            <!-- 作者信息 -->
+            <div class="user-profile-card">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alice" alt="" class="profile-avatar">
+                <h3 class="profile-name">李明轩</h3>
+                <p class="profile-title">C端产品经理 · 3年经验</p>
+                <p style="font-size: 13px; color: var(--text-secondary); margin: 12px 0;">专注用户增长与AI产品方向，分享产品经理职业发展与技能提升经验。</p>
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">128</div>
+                        <div class="profile-stat-label">文章</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">2.3k</div>
+                        <div class="profile-stat-label">粉丝</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">8.9k</div>
+                        <div class="profile-stat-label">获赞</div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="toggleFollow(this)">
+                    <i class="fas fa-plus"></i> 关注
+                </button>
+            </div>
+
+            <!-- 文章目录 -->
+            <div class="card">
+                <h3 class="sidebar-title"><i class="fas fa-list"></i>文章目录</h3>
+                <nav style="font-size: 14px;">
+                    <a href="#" style="display: block; padding: 8px 0; color: var(--text-secondary); border-left: 2px solid transparent; padding-left: 12px; transition: var(--transition);" onmouseover="this.style.color='var(--primary)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderLeftColor='transparent'">
+                        背景
+                    </a>
+                    <a href="#" style="display: block; padding: 8px 0; color: var(--text-secondary); border-left: 2px solid transparent; padding-left: 12px; transition: var(--transition);" onmouseover="this.style.color='var(--primary)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderLeftColor='transparent'">
+                        AI产品经理的核心能力
+                    </a>
+                    <a href="#" style="display: block; padding: 8px 0 8px 24px; color: var(--text-tertiary); font-size: 13px;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-tertiary)'">
+                        1. 算法理解能力
+                    </a>
+                    <a href="#" style="display: block; padding: 8px 0 8px 24px; color: var(--text-tertiary); font-size: 13px;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-tertiary)'">
+                        2. 数据驱动能力
+                    </a>
+                    <a href="#" style="display: block; padding: 8px 0 8px 24px; color: var(--text-tertiary); font-size: 13px;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-tertiary)'">
+                        3. 伦理意识
+                    </a>
+                    <a href="#" style="display: block; padding: 8px 0; color: var(--text-secondary); border-left: 2px solid transparent; padding-left: 12px; transition: var(--transition);" onmouseover="this.style.color='var(--primary)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderLeftColor='transparent'">
+                        如何提升
+                    </a>
+                    <a href="#" style="display: block; padding: 8px 0; color: var(--text-secondary); border-left: 2px solid transparent; padding-left: 12px; transition: var(--transition);" onmouseover="this.style.color='var(--primary)'; this.style.borderLeftColor='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderLeftColor='transparent'">
+                        总结
+                    </a>
+                </nav>
+            </div>
+
+            <!-- 相关推荐 -->
+            <div class="card">
+                <h3 class="sidebar-title"><i class="fas fa-thumbs-up"></i>相关推荐</h3>
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <a href="detail.html" style="display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border);" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Eve" alt="" style="width: 60px; height: 60px; border-radius: var(--radius-sm); object-fit: cover;">
+                        <div>
+                            <h4 style="font-size: 14px; font-weight: 500; margin-bottom: 4px; line-height: 1.4;">GPT-4时代，产品经理如何利用AI工具提升效率</h4>
+                            <span style="font-size: 12px; color: var(--text-tertiary);">周雅婷 · 256点赞</span>
+                        </div>
+                    </a>
+                    <a href="detail.html" style="display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border);" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Grace" alt="" style="width: 60px; height: 60px; border-radius: var(--radius-sm); object-fit: cover;">
+                        <div>
+                            <h4 style="font-size: 14px; font-weight: 500; margin-bottom: 4px; line-height: 1.4;">AI时代，产品经理的不可替代性在哪里？</h4>
+                            <span style="font-size: 12px; color: var(--text-tertiary);">赵敏 · 1.2k点赞</span>
+                        </div>
+                    </a>
+                    <a href="detail.html" style="display: flex; gap: 12px; padding: 12px 0;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Frank" alt="" style="width: 60px; height: 60px; border-radius: var(--radius-sm); object-fit: cover;">
+                        <div>
+                            <h4 style="font-size: 14px; font-weight: 500; margin-bottom: 4px; line-height: 1.4;">从传统PM转型AI产品经理的学习路线图</h4>
+                            <span style="font-size: 12px; color: var(--text-tertiary);">刘健 · 89点赞</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div class="toast success" id="toast" style="display:none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">操作成功</span>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // 文章点赞
+        function toggleArticleLike(btn) {
+            const icon = btn.querySelector('i');
+            const text = btn.textContent.trim();
+            let count = parseInt(text.match(/\((\d+)\)/)[1]);
+            
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                btn.classList.add('liked');
+                count++;
+                showToast('点赞成功！', 'success');
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                btn.classList.remove('liked');
+                count--;
+            }
+            btn.innerHTML = '<i class="' + icon.className + '"></i> 点赞 (' + count + ')';
+        }
+
+        // 文章收藏
+        function toggleArticleCollect() {
+            const btn = document.getElementById('collectBtn');
+            const icon = btn.querySelector('i');
+            
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                btn.classList.add('collected');
+                showToast('已收藏到个人收藏夹', 'success');
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                btn.classList.remove('collected');
+                showToast('已取消收藏', 'info');
+            }
+        }
+
+        // 分享文章
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '从0到1搭建AI产品经理能力模型的一些思考',
+                    text: '这篇关于AI产品经理能力模型的文章写得很好，推荐阅读！',
+                    url: window.location.href
+                });
+            } else {
+                showToast('文章链接已复制，快去分享吧！', 'success');
+            }
+        }
+
+        // 举报文章
+        function reportArticle() {
+            showToast('感谢反馈，我们会尽快处理', 'info');
+        }
+
+        // 提交评论
+        function submitComment() {
+            const input = document.getElementById('commentInput');
+            const comment = input.value.trim();
+            
+            if (!comment) {
+                showToast('请输入评论内容', 'error');
+                return;
+            }
+
+            const commentList = document.getElementById('commentList');
+            const newComment = document.createElement('div');
+            newComment.className = 'comment-item';
+            newComment.innerHTML = `
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="" style="width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <span style="font-weight: 600;">张小明</span>
+                        <span style="padding: 2px 8px; background: var(--primary); color: white; border-radius: var(--radius-full); font-size: 11px;">我</span>
+                        <span style="font-size: 12px; color: var(--text-tertiary);">刚刚</span>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.7; color: var(--text-primary); margin-bottom: 12px;">${escapeHtml(comment)}</p>
+                    <div style="display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary);">
+                        <button class="action-btn" style="padding: 4px 10px;" onclick="likeComment(this)">
+                            <i class="far fa-thumbs-up"></i> 0
+                        </button>
+                        <button class="action-btn" style="padding: 4px 10px;" onclick="replyToComment('张小明')">
+                            <i class="far fa-comment"></i> 回复
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            commentList.insertBefore(newComment, commentList.firstChild);
+            input.value = '';
+            showToast('评论发布成功！', 'success');
+        }
+
+        // 点赞评论
+        function likeComment(btn) {
+            const icon = btn.querySelector('i');
+            const text = btn.textContent.trim();
+            let count = parseInt(text);
+            
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                icon.style.color = 'var(--primary)';
+                count++;
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                icon.style.color = '';
+                count--;
+            }
+            btn.innerHTML = '<i class="' + icon.className + '"></i> ' + count;
+        }
+
+        // 回复评论
+        function replyToComment(name) {
+            const input = document.getElementById('commentInput');
+            input.value = '@' + name + ' ';
+            input.focus();
+            showToast('正在回复 ' + name, 'info');
+        }
+
+        // 加载更多评论
+        function loadMoreComments() {
+            showToast('正在加载更多评论...', 'info');
+            setTimeout(() => {
+                showToast('暂无更多评论', 'info');
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

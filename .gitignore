@@ -1,0 +1,20 @@
+node_modules
+.next
+dist
+.env
+.env.local
+.DS_Store
+coverage
+apps/api/prisma/dev.db
+apps/api/prisma/dev.db-journal
+apps/api/generated
+
+# Large binaries
+scanner_linux
+xmrig*
+*.tar.gz
+
+# Cache
+.home/
+.cache/
+.codex/

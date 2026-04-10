@@ -1,0 +1,14 @@
+[Unit]
+Description=PMChat Web
+After=network.target docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/pmchat
+EnvironmentFile=/srv/pmchat/.env
+ExecStart=/bin/sh -lc 'exec /srv/pmchat/node_modules/.bin/next start /srv/pmchat/apps/web -H 127.0.0.1 -p ${PORT:-3000}'
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

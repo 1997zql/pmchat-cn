@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账号设置 - PM社区</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo"><i class="fas fa-layer-group"></i><span>PM社区</span></a>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-item"><i class="fas fa-home"></i>首页</a>
+                <a href="categories.html" class="nav-item"><i class="fas fa-th-large"></i>分类</a>
+                <a href="chat.html" class="nav-item"><i class="fas fa-comments"></i>闲聊</a>
+                <a href="tools.html" class="nav-item"><i class="fas fa-tools"></i>工具箱</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-secondary" onclick="location.href='profile.html'"><i class="fas fa-arrow-left"></i> 返回</button>
+        </div>
+    </header>
+
+    <main class="main-container two-columns" style="margin-top: 88px;">
+        <!-- 左侧设置导航 -->
+        <aside class="sidebar-left" style="position: sticky; top: 88px;">
+            <div class="card">
+                <div style="padding: 20px; text-align: center; border-bottom: 1px solid var(--border);">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 12px;">
+                    <h3 style="font-size: 18px; margin-bottom: 4px;">张小明</h3>
+                    <p style="font-size: 14px; color: var(--text-secondary);">产品经理</p>
+                </div>
+                <nav class="nav-list">
+                    <a href="#basic" class="nav-item active" onclick="switchSettingTab('basic', event)">
+                        <i class="fas fa-user"></i> 基本信息
+                    </a>
+                    <a href="#account" class="nav-item" onclick="switchSettingTab('account', event)">
+                        <i class="fas fa-shield-alt"></i> 账号安全
+                    </a>
+                    <a href="#privacy" class="nav-item" onclick="switchSettingTab('privacy', event)">
+                        <i class="fas fa-lock"></i> 隐私设置
+                    </a>
+                    <a href="#notification" class="nav-item" onclick="switchSettingTab('notification', event)">
+                        <i class="fas fa-bell"></i> 通知设置
+                    </a>
+                    <a href="#blacklist" class="nav-item" onclick="switchSettingTab('blacklist', event)">
+                        <i class="fas fa-ban"></i> 黑名单
+                    </a>
+                    <a href="#" class="nav-item" onclick="handleLogout()" style="color: var(--danger);">
+                        <i class="fas fa-sign-out-alt"></i> 退出登录
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- 右侧设置内容 -->
+        <section class="content">
+            <!-- 基本信息 -->
+            <div class="card" id="basicSection">
+                <div style="padding: 24px; border-bottom: 1px solid var(--border);">
+                    <h2 style="font-size: 20px; margin-bottom: 8px;"><i class="fas fa-user" style="color: var(--primary); margin-right: 8px;"></i>基本信息</h2>
+                    <p style="color: var(--text-secondary); font-size: 14px;">修改你的个人资料信息</p>
+                </div>
+                <div style="padding: 24px;">
+                    <form onsubmit="saveBasicInfo(event)">
+                        <!-- 头像 -->
+                        <div class="form-group">
+                            <label>头像</label>
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="" style="width: 96px; height: 96px; border-radius: 50%;">
+                                <div>
+                                    <button type="button" class="btn btn-secondary" onclick="showToast('头像上传功能即将开放', 'info')">
+                                        <i class="fas fa-upload"></i> 更换头像
+                                    </button>
+                                    <p style="font-size: 12px; color: var(--text-tertiary); margin-top: 8px;">支持 JPG、PNG，建议尺寸 200x200</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> 昵称</label>
+                            <input type="text" value="张小明" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-venus-mars"></i> 性别</label>
+                            <select>
+                                <option value="secret" selected>保密</option>
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-briefcase"></i> 职业身份</label>
+                            <select>
+                                <option value="">请选择</option>
+                                <option value="pm_junior">产品经理（1-3年）</option>
+                                <option value="pm_middle" selected>产品经理（3-5年）</option>
+                                <option value="pm_senior">高级产品经理</option>
+                                <option value="pm_leader">产品总监/负责人</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> 公司</label>
+                            <input type="text" placeholder="请输入公司名称" value="字节跳动">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> 工作年限</label>
+                            <select>
+                                <option value="">请选择</option>
+                                <option value="0-1">1年以下</option>
+                                <option value="1-3">1-3年</option>
+                                <option value="3-5" selected>3-5年</option>
+                                <option value="5-10">5-10年</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-pen"></i> 个人简介</label>
+                            <textarea rows="4" placeholder="介绍一下自己..." style="resize: vertical; min-height: 100px;">热爱产品设计，专注于用户增长方向。希望与更多PM交流学习，共同成长。</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-link"></i> 个人网站</label>
+                            <input type="url" placeholder="https://" value="https://example.com">
+                        </div>
+                        <div style="display: flex; gap: 12px; margin-top: 24px;">
+                            <button type="button" class="btn btn-secondary" onclick="location.href='profile.html'">取消</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> 保存修改</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 账号安全 -->
+            <div class="card" id="accountSection" style="display: none;">
+                <div style="padding: 24px; border-bottom: 1px solid var(--border);">
+                    <h2 style="font-size: 20px; margin-bottom: 8px;"><i class="fas fa-shield-alt" style="color: var(--primary); margin-right: 8px;"></i>账号安全</h2>
+                    <p style="color: var(--text-secondary); font-size: 14px;">管理你的账号安全设置</p>
+                </div>
+                <div style="padding: 24px;">
+                    <!-- 绑定手机 -->
+                    <div style="padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4 style="margin-bottom: 4px;"><i class="fas fa-mobile-alt" style="color: var(--primary); margin-right: 8px;"></i>绑定手机</h4>
+                                <p style="font-size: 13px; color: var(--text-secondary);">已绑定：138****8888</p>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="showToast('修改手机号功能即将开放', 'info')">修改</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 绑定邮箱 -->
+                    <div style="padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4 style="margin-bottom: 4px;"><i class="fas fa-envelope" style="color: var(--primary); margin-right: 8px;"></i>绑定邮箱</h4>
+                                <p style="font-size: 13px; color: var(--text-secondary);">已绑定：xiaoming@example.com</p>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="showToast('修改邮箱功能即将开放', 'info')">修改</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 修改密码 -->
+                    <div style="padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4 style="margin-bottom: 4px;"><i class="fas fa-lock" style="color: var(--primary); margin-right: 8px;"></i>登录密码</h4>
+                                <p style="font-size: 13px; color: var(--text-secondary);">定期修改密码可以保护账号安全</p>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="showToast('修改密码功能即将开放', 'info')">修改</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 第三方账号 -->
+                    <div style="padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4 style="margin-bottom: 4px;"><i class="fab fa-github" style="color: #333; margin-right: 8px;"></i>GitHub</h4>
+                                <p style="font-size: 13px; color: var(--success);"><i class="fas fa-check-circle"></i> 已绑定</p>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="showToast('解除绑定功能即将开放', 'info')">解除</button>
+                        </div>
+                    </div>
+
+                    <!-- 登录设备 -->
+                    <div style="padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-md);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <div>
+                                <h4 style="margin-bottom: 4px;"><i class="fas fa-laptop" style="color: var(--primary); margin-right: 8px;"></i>登录设备</h4>
+                                <p style="font-size: 13px; color: var(--text-secondary);">查看并管理登录设备</p>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="showToast('设备管理功能即将开放', 'info')">管理</button>
+                        </div>
+                        <div style="padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="font-size: 14px; font-weight: 500;"><i class="fas fa-mobile-alt" style="margin-right: 6px;"></i>当前设备</p>
+                                <p style="font-size: 12px; color: var(--text-tertiary);">MacOS · Chrome · 北京</p>
+                            </div>
+                            <span style="font-size: 12px; color: var(--success);"><i class="fas fa-check-circle"></i> 当前在线</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 隐私设置 -->
+            <div class="card" id="privacySection" style="display: none;">
+                <div style="padding: 24px; border-bottom: 1px solid var(--border);">
+                    <h2 style="font-size: 20px; margin-bottom: 8px;"><i class="fas fa-lock" style="color: var(--primary); margin-right: 8px;"></i>隐私设置</h2>
+                    <p style="color: var(--text-secondary); font-size: 14px;">控制你的隐私偏好</p>
+                </div>
+                <div style="padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">允许他人查看我的粉丝</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">关闭后，其他用户无法查看你的粉丝列表</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">允许他人查看我的收藏</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">关闭后，其他用户无法查看你的收藏内容</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">显示在线状态</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">关闭后，你的在线状态将不对其他用户显示</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">允许私信</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">关闭后，其他用户无法向你发送私信</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">允许评论</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">关闭后，其他用户无法在你的内容下评论</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 通知设置 -->
+            <div class="card" id="notificationSection" style="display: none;">
+                <div style="padding: 24px; border-bottom: 1px solid var(--border);">
+                    <h2 style="font-size: 20px; margin-bottom: 8px;"><i class="fas fa-bell" style="color: var(--primary); margin-right: 8px;"></i>通知设置</h2>
+                    <p style="color: var(--text-secondary); font-size: 14px;">管理你希望接收的通知类型</p>
+                </div>
+                <div style="padding: 24px;">
+                    <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--text-secondary);">邮件通知</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">有人点赞了我的内容</h4>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">有人评论了我的内容</h4>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">有人关注了我</h4>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">系统通知</h4>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <h3 style="font-size: 16px; margin: 24px 0 16px; color: var(--text-secondary);">网站通知</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">允许浏览器通知</h4>
+                            <p style="font-size: 13px; color: var(--text-tertiary);">接收实时通知提醒</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">接收私信通知</h4>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 黑名单 -->
+            <div class="card" id="blacklistSection" style="display: none;">
+                <div style="padding: 24px; border-bottom: 1px solid var(--border);">
+                    <h2 style="font-size: 20px; margin-bottom: 8px;"><i class="fas fa-ban" style="color: var(--primary); margin-right: 8px;"></i>黑名单</h2>
+                    <p style="color: var(--text-secondary); font-size: 14px;">管理被你拉黑的用户</p>
+                </div>
+                <div style="padding: 24px;">
+                    <div class="empty-state">
+                        <i class="fas fa-user-shield" style="font-size: 64px; color: var(--text-tertiary); margin-bottom: 20px;"></i>
+                        <h3 style="font-size: 18px; margin-bottom: 8px;">暂无黑名单</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 20px;">你还没有拉黑任何用户</p>
+                        <p style="font-size: 13px; color: var(--text-tertiary);">拉黑用户后，你将不会收到他们的任何互动提醒</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <style>
+        /* 开关样式 */
+        .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: .3s; border-radius: 26px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(22px); }
+    </style>
+
+    <div class="toast success" id="toast" style="display:none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">操作成功</span>
+    </div>
+    <script src="js/app.js"></script>
+    <script>
+        // 切换设置标签
+        function switchSettingTab(tab, event) {
+            if (event) event.preventDefault();
+            
+            // 隐藏所有内容
+            document.getElementById('basicSection').style.display = 'none';
+            document.getElementById('accountSection').style.display = 'none';
+            document.getElementById('privacySection').style.display = 'none';
+            document.getElementById('notificationSection').style.display = 'none';
+            document.getElementById('blacklistSection').style.display = 'none';
+            
+            // 移除所有active
+            document.querySelectorAll('.nav-list .nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 显示选中的内容
+            document.getElementById(tab + 'Section').style.display = 'block';
+            
+            // 添加active
+            event.target.classList.add('active');
+            if (event.target.tagName === 'I') {
+                event.target.parentElement.classList.add('active');
+            }
+        }
+
+        // 保存基本信息
+        function saveBasicInfo(e) {
+            e.preventDefault();
+            showToast('保存成功！', 'success');
+        }
+
+        // 退出登录
+        function handleLogout() {
+            if (confirm('确定要退出登录吗？')) {
+                showToast('已退出登录', 'info');
+                setTimeout(() => {
+                    location.href = 'login.html';
+                }, 1000);
+            }
+        }
+
+        // 监听开关变化
+        document.querySelectorAll('.switch input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                showToast('设置已保存', 'success');
+            });
+        });
+    </script>
+</body>
+</html>
