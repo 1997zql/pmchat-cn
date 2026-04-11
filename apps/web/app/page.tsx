@@ -1,454 +1,617 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
-// 模拟帖子数据
+// SVG 图标组件
+const Icons = {
+  logo: () => (
+    <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+  ),
+  home: () => (
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+  ),
+  grid: () => (
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+  ),
+  chat: () => (
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  ),
+  tool: () => (
+    <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+  ),
+  edit: () => (
+    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  ),
+  search: () => (
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  ),
+  arrowRight: () => (
+    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+  ),
+  chevronUp: () => (
+    <svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg>
+  ),
+  chevronDown: () => (
+    <svg viewBox="0 0 24 24"><polyline points="6,9 12,15 18,9"/></svg>
+  ),
+  message: () => (
+    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  ),
+  eye: () => (
+    <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+  ),
+  info: () => (
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  ),
+  fire: () => (
+    <svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+  ),
+  users: () => (
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  ),
+};
+
+// 帖子数据
 const posts = [
   {
     id: 1,
-    title: "B端后台产品经理如何突破职业瓶颈？",
-    author: "产品小王",
-    avatar: "👨‍💼",
-    tag: "职业发展",
-    tagType: "default",
-    time: "10分钟前",
-    votes: 42,
-    replies: 28,
-    views: 1256,
-    preview: "做了3年B端产品，感觉遇到了天花板。每天就是画原型、写PRD，和开发撕需求。想转C端但又担心经验不匹配...有没有大佬有类似经历可以分享下？",
+    title: "【重磅】ChatGPT-5 即将发布！对PM工作方式的影响深度分析",
+    author: "产品汪小明",
+    node: "AI产品",
+    tags: ["AI产品", "精华"],
+    votes: 256,
+    comments: 128,
+    views: "3.2k",
+    isTop: true,
+    preview: "🔥 重磅消息！OpenAI刚刚发布了GPT-5，性能提升300%！作为PM，我们需要思考：1）哪些工作会被AI替代？2）如何用AI提升产品体验？3）人机协作的正确姿势是什么？本文深度分析..."
   },
   {
     id: 2,
-    title: "求推荐：适合产品经理用的数据可视化工具",
-    author: "数据派",
-    avatar: "📊",
-    tag: "工具推荐",
-    tagType: "toolbox",
-    time: "25分钟前",
-    votes: 18,
-    replies: 15,
-    views: 456,
-    preview: "领导让我做一个数据看板展示给客户看，要求既能看数据趋势，又要做得很炫酷。有什么工具可以快速上手？",
+    title: "做了3年B端产品，这些坑你一定要避开（附避坑指南）",
+    author: "B端老王",
+    node: "B端产品",
+    tags: ["B端产品"],
+    votes: 89,
+    comments: 56,
+    views: "1.8k",
+    preview: "在B端产品领域摸爬滚打3年，总结了12个容易踩的坑：1）需求变更没有记录 2）验收标准不清晰 3）忽略异常流程 4）不重视技术债务...希望对新人有帮助。"
   },
   {
     id: 3,
-    title: "创业公司产品经理的一天是怎么过的？",
-    author: "创业者老张",
-    avatar: "🚀",
-    tag: "闲聊",
-    tagType: "chat",
-    time: "1小时前",
-    votes: 89,
-    replies: 56,
-    views: 2341,
-    preview: "刚从大厂跳到创业公司，节奏完全不一样了。之前每天按排期走，现在恨不得一个人当三个人用...",
+    title: "字节跳动面经：3轮面试 + 笔试，完整复盘分享",
+    author: "求职小能手",
+    node: "求职面试",
+    tags: ["求职面试"],
+    votes: 67,
+    comments: 43,
+    views: "2.1k",
+    preview: "刚刚结束字节跳动3轮面试+笔试，整个流程非常严格。第一轮是业务leader，主要问项目经验；第二轮是总监，注重逻辑思维；第三轮是HR，谈薪资福利。整理了一份详细面经..."
   },
   {
     id: 4,
-    title: "PRD文档写作规范与模板分享",
-    author: "文档达人",
-    avatar: "📝",
-    tag: "资源分享",
-    tagType: "default",
-    time: "2小时前",
-    votes: 156,
-    replies: 42,
-    views: 5620,
-    preview: "整理了一份内部使用的PRD模板，包含需求背景、功能列表、原型链接、验收标准等模块，直接可用！",
+    title: "从功能PM到产品总监，我的5年成长路径",
+    author: "产品总监老李",
+    node: "职场成长",
+    tags: ["职场成长"],
+    votes: 45,
+    comments: 38,
+    views: "1.5k",
+    preview: "从功能PM到产品总监，5年时间，我的成长路径是：功能PM(1年)→ 需求PM(1年) → 产品负责人(1.5年) → 产品总监(1.5年)。每个阶段需要的能力模型不同..."
   },
   {
     id: 5,
-    title: "AIGC时代，产品经理需要具备哪些新能力？",
-    author: "AI探索者",
-    avatar: "🤖",
-    tag: "AI产品",
-    tagType: "default",
-    time: "3小时前",
-    votes: 203,
-    replies: 89,
-    views: 8932,
-    preview: "最近在研究怎么用AI提效，发现Prompt工程能力很重要。还有什么能力是PM在AI时代需要重点培养的？",
-  },
-  {
-    id: 6,
-    title: "面试被问到「你最大的缺点是什么」，怎么回答比较好？",
-    author: "求职中",
-    avatar: "🎯",
-    tag: "求职面试",
-    tagType: "default",
-    time: "4小时前",
-    votes: 67,
-    replies: 34,
-    views: 3210,
-    preview: "投了几个大厂，面试都挂在这个问题上。说太真诚显得没能力，说太圆滑又显得不真诚，到底该怎么回答？",
-  },
-  {
-    id: 7,
-    title: "大家平时用什么工具画原型？Figma还是Axure？",
-    author: "设计师小李",
-    avatar: "🎨",
-    tag: "工具讨论",
-    tagType: "toolbox",
-    time: "5小时前",
-    votes: 91,
-    replies: 67,
-    views: 4532,
-    preview: "公司之前用Axure，但最近大家都在说Figma。想问问各位PM的真实使用体验，哪个更适合产品经理快速出原型？",
-  },
-  {
-    id: 8,
-    title: "如何优雅地拒绝产品需求？",
-    author: "老油条",
-    avatar: "😎",
-    tag: "职场生存",
-    tagType: "default",
-    time: "6小时前",
-    votes: 234,
-    replies: 78,
-    views: 12000,
-    preview: "运营天天提需求，技术说做不了，老板说必须上...夹在中间太难了。有什么高情商拒绝需求的方法吗？",
+    title: "老板说\"这个需求很简单\"，然后我做了3周...",
+    author: "摸鱼达人",
+    node: "摸鱼吐槽",
+    tags: ["摸鱼吐槽"],
+    votes: 32,
+    comments: 89,
+    views: "2.8k",
+    preview: "老板：这个小需求很简单嘛，两天能做完吧？\n\n我内心：...\n\n实际：这个需求涉及5个系统对接、3个异常流程、2个数据迁移、1个历史包袱...\n\n两周后还在改bug中😭"
   },
 ];
 
 // 社交证明数据
-const socialProofItems = [
-  { name: "李产品", action: "刚刚加入了社区" },
-  { name: "王经理", action: "发布了新帖子" },
-  { name: "张PM", action: "回复了热门话题" },
-  { name: "赵总监", action: "刚刚加入了社区" },
-  { name: "刘设计", action: "发布了新帖子" },
-  { name: "陈产品", action: "收藏了工具合集" },
-  { name: "周经理", action: "刚刚加入了社区" },
-  { name: "吴PM", action: "回复了热门话题" },
+const socialProofs = [
+  { avatar: "李", text: "李产品 刚刚加入了社区" },
+  { avatar: "王", text: "王小龙 发帖被点赞 +56" },
+  { avatar: "张", text: "张经理 收藏了资料包" },
+  { avatar: "陈", text: "陈PM 刚刚加入了社区" },
+  { avatar: "刘", text: "刘产品 发帖被点赞 +23" },
+  { avatar: "周", text: "周总 收藏了资料包" },
 ];
 
-export default function HomePage() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [previewPost, setPreviewPost] = useState<typeof posts[0] | null>(null);
+export default function Home() {
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewText, setPreviewText] = useState("");
+  const [hotPostVisible, setHotPostVisible] = useState(true);
+  const [activeFilter, setActiveFilter] = useState("最新");
+  const [votedPosts, setVotedPosts] = useState<Set<number>>(new Set());
+  const [voteCounts, setVoteCounts] = useState<Record<number, number>>(
+    posts.reduce((acc, p) => ({ ...acc, [p.id]: p.votes }), {})
+  );
 
-  const hotPost = posts[4]; // AIGC那个最热
+  // 处理投票
+  const handleVote = (e: React.MouseEvent, postId: number) => {
+    e.stopPropagation();
+    setVotedPosts(prev => {
+      const newSet = new Set(prev);
+      const isVoted = newSet.has(postId);
+      
+      setVoteCounts(counts => ({
+        ...counts,
+        [postId]: isVoted ? counts[postId] - 1 : counts[postId] + 1
+      }));
+      
+      if (isVoted) {
+        newSet.delete(postId);
+      } else {
+        newSet.add(postId);
+      }
+      return newSet;
+    });
+  };
+
+  // 显示帖子预览
+  const showPreview = (text: string) => {
+    setPreviewText(text);
+    setPreviewOpen(true);
+  };
+
+  // 切换登录/注册
+  const switchToRegister = () => {
+    setLoginOpen(false);
+    setTimeout(() => setRegisterOpen(true), 200);
+  };
 
   return (
-    <div className="main-layout">
+    <>
       {/* 顶部公告栏 */}
       <div className="top-banner">
         <div className="top-banner-content">
-          <span>🎉</span>
-          <span>PM茶水间全新升级，<strong>产品经理的聚集地</strong></span>
+          <span className="banner-icon">🎉</span>
+          <span className="banner-text">欢迎新PM！今日已有 <strong>23</strong> 位产品经理加入社区</span>
         </div>
       </div>
 
-      {/* 社交证明滚动 */}
-      <div className="social-proof-bar">
-        <div className="social-proof-track">
-          {[...socialProofItems, ...socialProofItems].map((item, i) => (
-            <div key={i} className="social-proof-item">
-              <div className="proof-avatar">{item.name[0]}</div>
-              <span>
-                <strong>{item.name}</strong> {item.action}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 左侧导航 */}
-      <aside className="left-nav">
-        <div className="nav-logo">
-          <h1>PM茶水间</h1>
-          <span>产品经理的聚集地</span>
-        </div>
-
-        <nav className="nav-section">
-          <div className="nav-section-title">首页</div>
-          <Link href="/" className="nav-item active">
-            <span className="nav-item-icon">🏠</span>
-            <span>全部帖子</span>
-            <span className="nav-item-count">1.2k</span>
+      <div className="layout">
+        {/* 左侧边栏 */}
+        <aside className="sidebar">
+          <Link href="/" className="sidebar-logo">
+            <span className="sidebar-logo-icon">
+              <Icons.logo />
+            </span>
+            <span className="sidebar-logo-text">PM茶水间</span>
           </Link>
-        </nav>
 
-        <nav className="nav-section">
-          <div className="nav-section-title">产品分类</div>
-          <Link href="/topics" className="nav-item">
-            <span className="nav-item-icon">📦</span>
-            <span>产品分类</span>
-          </Link>
-          <Link href="/topics" className="nav-item">
-            <span className="nav-item-icon">💼</span>
-            <span>B端产品</span>
-          </Link>
-          <Link href="/topics" className="nav-item">
-            <span className="nav-item-icon">📱</span>
-            <span>C端产品</span>
-          </Link>
-          <Link href="/topics" className="nav-item">
-            <span className="nav-item-icon">🤖</span>
-            <span>AI产品</span>
-          </Link>
-        </nav>
+          <nav className="sidebar-nav">
+            <Link href="/" className="sidebar-nav-item active">
+              <span className="nav-icon"><Icons.home /></span>
+              首页
+            </Link>
+            <Link href="/categories" className="sidebar-nav-item">
+              <span className="nav-icon"><Icons.grid /></span>
+              产品分类
+            </Link>
+            <Link href="/chat" className="sidebar-nav-item">
+              <span className="nav-icon"><Icons.chat /></span>
+              闲聊话题
+            </Link>
+            <Link href="/tools" className="sidebar-nav-item">
+              <span className="nav-icon"><Icons.tool /></span>
+              工具集合
+            </Link>
+            <Link href="/create" className="sidebar-nav-item">
+              <span className="nav-icon"><Icons.edit /></span>
+              发帖子
+            </Link>
+          </nav>
 
-        <nav className="nav-section">
-          <div className="nav-section-title">社区</div>
-          <Link href="/chat" className="nav-item">
-            <span className="nav-item-icon">💬</span>
-            <span>闲聊话题</span>
-          </Link>
-          <Link href="/toolbox" className="nav-item">
-            <span className="nav-item-icon">🛠️</span>
-            <span>工具集合</span>
-          </Link>
-        </nav>
+          <div className="sidebar-divider"></div>
 
-        <nav className="nav-section">
-          <div className="nav-section-title">账号</div>
-          <Link href="#" className="nav-item" onClick={(e) => { e.preventDefault(); setDrawerOpen(true); }}>
-            <span className="nav-item-icon">📧</span>
-            <span>登录 / 注册</span>
-          </Link>
-        </nav>
-
-        <div className="nav-user">
-          <div className="nav-user-info" onClick={() => setDrawerOpen(true)}>
-            <div className="nav-avatar">游</div>
-            <div className="nav-user-name">
-              <strong>游客用户</strong>
-              <span>登录后参与讨论</span>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* 主内容 */}
-      <main className="main-content">
-        <header className="content-header">
-          <h2>全部帖子</h2>
-          <div className="search-box">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="搜索帖子..."
-            />
-          </div>
-        </header>
-
-        <div className="content-body">
-          <div className="post-list">
-            {posts.map((post) => (
-              <article
-                key={post.id}
-                className="post-item"
-                onClick={() => setPreviewPost(post)}
-              >
-                <div className="post-avatar">{post.avatar}</div>
-                <div className="post-main">
-                  <Link href={`/post/${post.id}`} className="post-title" onClick={(e) => e.stopPropagation()}>
-                    {post.title}
-                  </Link>
-                  <div className="post-meta">
-                    <span className={`post-tag ${post.tagType}`}>
-                      {post.tag}
-                    </span>
-                    <span className="post-author">{post.author}</span>
-                    <span className="post-time">{post.time}</span>
-                  </div>
-                </div>
-                <div className="post-stats">
-                  <span className="post-stat">
-                    <span>💬</span>
-                    {post.replies}
-                  </span>
-                  <span className="post-stat">
-                    <span>👁️</span>
-                    {post.views}
-                  </span>
-                </div>
-              </article>
+          <div className="sidebar-tags">
+            <h4 className="sidebar-tags-title">热门节点</h4>
+            {["B端产品", "C端产品", "AI产品", "求职面试", "职场成长", "摸鱼吐槽"].map(tag => (
+              <span key={tag} className="sidebar-tag">{tag}</span>
             ))}
           </div>
 
-          {/* 分页 */}
-          <div className="pagination">
-            <button className="page-btn">上一页</button>
-            <button className="page-btn active">1</button>
-            <button className="page-btn">2</button>
-            <button className="page-btn">3</button>
-            <button className="page-btn">...</button>
-            <button className="page-btn">50</button>
-            <button className="page-btn">下一页</button>
+          <div className="sidebar-user">
+            <button className="btn btn-outline btn-full" onClick={() => setLoginOpen(true)}>登录</button>
+            <button className="btn btn-primary btn-full" onClick={() => setRegisterOpen(true)}>加入社区</button>
           </div>
-        </div>
-      </main>
+        </aside>
 
-      {/* 右侧边栏 */}
-      <aside className="right-rail">
-        {/* 发帖按钮 */}
-        <button className="new-post-btn" onClick={() => setDrawerOpen(true)}>
-          <span>✏️</span>
-          <span>发布新帖</span>
-        </button>
-
-        {/* 登录卡片 */}
-        <div className="rail-card login-card">
-          <p>登录后可发布帖子、参与讨论</p>
-          <button className="login-btn" onClick={() => setDrawerOpen(true)}>登录 / 注册</button>
-        </div>
-
-        {/* 快捷入口 */}
-        <div className="rail-card">
-          <div className="rail-card-title">
-            <span>⚡</span>
-            快捷入口
-          </div>
-          <div className="quick-links">
-            <Link href="/topics" className="quick-link">
-              <span className="quick-link-icon">📦</span>
-              <span>产品分类</span>
-            </Link>
-            <Link href="/chat" className="quick-link">
-              <span className="quick-link-icon">💬</span>
-              <span>闲聊话题</span>
-            </Link>
-            <Link href="/toolbox" className="quick-link">
-              <span className="quick-link-icon">🛠️</span>
-              <span>工具集合</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* 热门话题 */}
-        <div className="rail-card">
-          <div className="rail-card-title">
-            <span>🔥</span>
-            热门话题
-          </div>
-          <div className="hot-topics">
-            <div className="hot-topic">
-              <span className="hot-topic-num">1</span>
-              <span className="hot-topic-title">产品经理简历怎么写</span>
-              <span className="hot-topic-count">2.3k</span>
+        {/* 中间主内容 */}
+        <main className="content">
+          {/* Hero Banner */}
+          <div className="hero-section">
+            <div className="hero-content">
+              <span className="hero-label">产品经理专属社区</span>
+              <h1 className="hero-title">欢迎来到 <span className="hero-highlight">PM茶水间</span></h1>
+              <p className="hero-desc">产品经理的知识库、讨论区、工具箱 — 在这里成长，不孤独</p>
+              <div className="hero-stats">
+                <div className="hero-stat">
+                  <div className="hero-stat-num">12,847</div>
+                  <div className="hero-stat-label">产品经理</div>
+                </div>
+                <div className="hero-stat">
+                  <div className="hero-stat-num">35,621</div>
+                  <div className="hero-stat-label">讨论帖子</div>
+                </div>
+                <div className="hero-stat">
+                  <div className="hero-stat-num">8,432</div>
+                  <div className="hero-stat-label">工具资源</div>
+                </div>
+              </div>
             </div>
-            <div className="hot-topic">
-              <span className="hot-topic-num">2</span>
-              <span className="hot-topic-title">AIGC工具盘点</span>
-              <span className="hot-topic-count">1.8k</span>
-            </div>
-            <div className="hot-topic">
-              <span className="hot-topic-num">3</span>
-              <span className="hot-topic-title">B端vsC端产品经理</span>
-              <span className="hot-topic-count">1.5k</span>
-            </div>
-            <div className="hot-topic">
-              <span className="hot-topic-num">4</span>
-              <span className="hot-topic-title">需求评审怎么做</span>
-              <span className="hot-topic-count">1.2k</span>
-            </div>
-            <div className="hot-topic">
-              <span className="hot-topic-num">5</span>
-              <span className="hot-topic-title">PRD模板推荐</span>
-              <span className="hot-topic-count">980</span>
+            
+            {/* 实时社交证明滚动 */}
+            <div className="social-proof-scroll">
+              <div className="social-proof-track">
+                {[...socialProofs, ...socialProofs].map((item, idx) => (
+                  <div key={idx} className="social-proof-item">
+                    <span className="proof-avatar">{item.avatar}</span>
+                    <span className="proof-text" dangerouslySetInnerHTML={{ 
+                      __html: item.text.replace(/(.*?) (.*)/, '<strong>$1</strong> $2') 
+                    }} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* 社区规范 */}
-        <div className="rail-card">
-          <div className="rail-card-title">
-            <span>📋</span>
-            社区规范
-          </div>
-          <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', paddingLeft: '16px', lineHeight: 2 }}>
-            <li>友善交流，互相尊重</li>
-            <li>禁止发布广告、软文</li>
-            <li>优质内容优先展示</li>
-            <li>禁止人身攻击、阴阳怪气</li>
-          </ul>
-        </div>
-      </aside>
+          {/* 三大板块入口 */}
+          <div className="section-grid">
+            {/* 产品分类 */}
+            <div className="section-card section-card-primary">
+              <div className="section-card-header">
+                <div className="section-card-icon">
+                  <Icons.grid />
+                </div>
+                <h3 className="section-card-title">产品分类</h3>
+                <span className="section-card-badge">1.2k+ 资源</span>
+              </div>
+              <p className="section-card-desc">B端产品、C端产品、AI产品、数据产品...体系化知识整理</p>
+              <div className="section-card-search">
+                <input type="text" placeholder="搜索产品分类..." className="search-input" />
+                <button className="search-btn">
+                  <Icons.search />
+                </button>
+              </div>
+              <div className="section-card-tags">
+                <span className="section-tag">B端产品</span>
+                <span className="section-tag">C端产品</span>
+                <span className="section-tag">AI产品</span>
+              </div>
+              <Link href="/categories" className="section-card-link">
+                查看全部
+                <Icons.arrowRight />
+              </Link>
+            </div>
 
-      {/* 今日热帖浮窗 */}
-      <div className="hot-post-float">
-        <div className="hot-post-float-header">
-          <span>🔥</span>
-          <span>今日最热</span>
-        </div>
-        <div className="hot-post-float-content" onClick={() => setPreviewPost(hotPost)}>
-          <div className="hot-post-title">{hotPost.title}</div>
-          <div className="hot-post-meta">
-            <span>👁️ {hotPost.views}</span>
-            <span>💬 {hotPost.replies}</span>
+            {/* 闲聊话题 */}
+            <div className="section-card section-card-secondary">
+              <div className="section-card-header">
+                <div className="section-card-icon">
+                  <Icons.chat />
+                </div>
+                <h3 className="section-card-title">闲聊话题</h3>
+                <span className="section-card-badge section-badge-hot">热门</span>
+              </div>
+              <p className="section-card-desc">和产品同行聊聊职场、面试、薪资...有温度的社区</p>
+              <div className="section-card-tags">
+                <span className="section-tag">求职面试</span>
+                <span className="section-tag">职场成长</span>
+                <span className="section-tag">摸鱼吐槽</span>
+              </div>
+              <Link href="/chat" className="section-card-link">
+                进入讨论
+                <Icons.arrowRight />
+              </Link>
+            </div>
+
+            {/* 工具集合 */}
+            <div className="section-card section-card-accent">
+              <div className="section-card-header">
+                <div className="section-card-icon">
+                  <Icons.tool />
+                </div>
+                <h3 className="section-card-title">工具集合</h3>
+                <span className="section-card-badge">500+ 工具</span>
+              </div>
+              <p className="section-card-desc">PRD模板、Axure素材、数据看板...效率提升神器</p>
+              <div className="section-card-tags">
+                <span className="section-tag">模板下载</span>
+                <span className="section-tag">素材库</span>
+                <span className="section-tag">效率工具</span>
+              </div>
+              <Link href="/tools" className="section-card-link">
+                探索工具
+                <Icons.arrowRight />
+              </Link>
+            </div>
           </div>
-        </div>
+
+          {/* 帖子列表 */}
+          <div className="posts-section">
+            <div className="posts-header">
+              <h2 className="posts-title">最新帖子</h2>
+              <div className="posts-filter">
+                {["最新", "热门", "推荐"].map(filter => (
+                  <button 
+                    key={filter}
+                    className={`filter-btn ${activeFilter === filter ? 'active' : ''}`}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="post-list">
+              {posts.map(post => (
+                <div 
+                  key={post.id} 
+                  className={`post-item ${post.isTop ? 'post-top' : ''}`}
+                  onClick={() => showPreview(post.preview)}
+                >
+                  <div className="post-vote">
+                    <button 
+                      className={`vote-btn up ${votedPosts.has(post.id) ? 'voted' : ''}`}
+                      onClick={(e) => handleVote(e, post.id)}
+                    >
+                      <Icons.chevronUp />
+                    </button>
+                    <span className="vote-count">{voteCounts[post.id]}</span>
+                    <button className="vote-btn down">
+                      <Icons.chevronDown />
+                    </button>
+                  </div>
+                  <div className="post-main">
+                    <div className="post-node">
+                      {post.tags.map(tag => (
+                        <span key={tag} className="node-tag">{tag}</span>
+                      ))}
+                    </div>
+                    <div className="post-title-wrap">
+                      <Link href={`/post/${post.id}`} className="post-title" onClick={e => e.stopPropagation()}>
+                        {post.title}
+                      </Link>
+                    </div>
+                    <div className="post-meta">
+                      <span className="meta-author">{post.author}</span>
+                      <span className="meta-item">
+                        <Icons.message />
+                        {post.comments}
+                      </span>
+                      <span className="meta-item">
+                        <Icons.eye />
+                        {post.views}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="load-more">
+              <button className="load-more-btn">
+                加载更多
+                <Icons.chevronDown />
+              </button>
+            </div>
+          </div>
+        </main>
+
+        {/* 右侧边栏 */}
+        <aside className="rightbar">
+          {/* 搜索 */}
+          <div className="quick-search">
+            <input type="text" placeholder="搜索话题..." className="quick-search-input" />
+            <button className="quick-search-btn">
+              <Icons.search />
+            </button>
+          </div>
+
+          {/* 社区介绍 */}
+          <div className="right-card right-card-highlight">
+            <div className="right-card-header">
+              <Icons.info />
+              关于社区
+            </div>
+            <div className="right-card-body">
+              <p className="right-desc">PM茶水间是产品经理专属的知识分享社区，汇聚B端、C端、AI、数据等各方向产品人。</p>
+              <div className="right-stats">
+                <div className="right-stat">
+                  <span className="right-stat-num">12k+</span>
+                  <span className="right-stat-label">PM会员</span>
+                </div>
+                <div className="right-stat">
+                  <span className="right-stat-num">35k+</span>
+                  <span className="right-stat-label">帖子</span>
+                </div>
+                <div className="right-stat">
+                  <span className="right-stat-num">500+</span>
+                  <span className="right-stat-label">工具</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 热门节点 */}
+          <div className="right-card">
+            <div className="right-card-header">
+              <Icons.fire />
+              热门节点
+            </div>
+            <div className="right-card-body">
+              <div className="hot-nodes">
+                {[
+                  { name: "AI产品", count: "2.3k" },
+                  { name: "B端产品", count: "1.8k" },
+                  { name: "求职面试", count: "1.5k" },
+                  { name: "C端产品", count: "1.2k" },
+                  { name: "职场成长", count: "980" },
+                ].map(node => (
+                  <div key={node.name} className="hot-node">
+                    <span className="hot-node-name">{node.name}</span>
+                    <span className="hot-node-count">{node.count}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 活跃用户 */}
+          <div className="right-card">
+            <div className="right-card-header">
+              <Icons.users />
+              活跃用户
+            </div>
+            <div className="right-card-body">
+              <div className="active-users">
+                {[
+                  { name: "张产品", title: "字节跳动高级PM", badge: "达人", avatar: "张" },
+                  { name: "李小龙", title: "阿里产品专家", badge: "专家", avatar: "李" },
+                  { name: "王小米", title: "腾讯产品经理", badge: "新秀", avatar: "王" },
+                ].map(user => (
+                  <div key={user.name} className="active-user">
+                    <div className="active-user-avatar">{user.avatar}</div>
+                    <div className="active-user-info">
+                      <div className="active-user-name">{user.name}</div>
+                      <div className="active-user-title">{user.title}</div>
+                    </div>
+                    <span className="active-user-badge">{user.badge}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 底部 */}
+          <div className="rightbar-footer">
+            <Link href="/about">关于我们</Link>
+            <Link href="/terms">用户协议</Link>
+            <Link href="/contact">联系方式</Link>
+            <div className="copyright">© 2024 PM茶水间</div>
+          </div>
+        </aside>
       </div>
 
-      {/* 抽屉遮罩 */}
-      <div
-        className={`drawer-overlay ${drawerOpen ? 'open' : ''}`}
-        onClick={() => setDrawerOpen(false)}
-      />
+      {/* 今日热帖浮窗 */}
+      {hotPostVisible && (
+        <div className="hot-post-float">
+          <div className="hot-post-float-header">
+            <span className="hot-icon">🔥</span>
+            <span>今日最热</span>
+            <button className="hot-close" onClick={() => setHotPostVisible(false)}>×</button>
+          </div>
+          <Link href="/post/hot" className="hot-post-float-content">
+            <div className="hot-post-title">【精华】20年PM老兵复盘：我踩过的那些坑</div>
+            <div className="hot-post-meta">
+              <span>阅读 5.2k</span>
+              <span>点赞 328</span>
+            </div>
+          </Link>
+        </div>
+      )}
 
       {/* 登录抽屉 */}
-      <div className={`drawer ${drawerOpen ? 'open' : ''}`}>
+      <div 
+        className={`drawer-overlay ${loginOpen ? 'open' : ''}`} 
+        onClick={() => setLoginOpen(false)}
+      ></div>
+      <div className={`drawer ${loginOpen ? 'open' : ''}`}>
         <div className="drawer-header">
-          <h3>欢迎回来</h3>
-          <button className="drawer-close" onClick={() => setDrawerOpen(false)}>×</button>
+          <h3>登录 PM茶水间</h3>
+          <button className="drawer-close" onClick={() => setLoginOpen(false)}>×</button>
         </div>
         <div className="drawer-body">
           <div className="form-group">
-            <label>邮箱</label>
-            <input type="email" className="form-input" placeholder="请输入邮箱" />
+            <label>邮箱 / 手机号</label>
+            <input type="text" className="form-input" placeholder="请输入邮箱或手机号" />
           </div>
           <div className="form-group">
             <label>密码</label>
             <input type="password" className="form-input" placeholder="请输入密码" />
           </div>
-          <button className="new-post-btn" style={{ marginTop: '8px' }}>
-            登录
-          </button>
-
-          <div className="drawer-divider">或</div>
-
-          <button className="login-btn">
-            📧 使用邮箱注册
-          </button>
-
+          <div className="form-row">
+            <label className="checkbox-label">
+              <input type="checkbox" /> 记住我
+            </label>
+            <Link href="/forgot" className="forgot-link">忘记密码？</Link>
+          </div>
+          <button className="btn btn-primary btn-full">登录</button>
+          <div className="drawer-divider">
+            <span>或</span>
+          </div>
+          <button className="btn btn-outline btn-full">微信登录</button>
           <p className="drawer-footer-text">
-            还没有账号？<a href="#">立即注册</a>
+            还没有账号？<a href="#" onClick={(e) => { e.preventDefault(); switchToRegister(); }}>立即注册</a>
+          </p>
+        </div>
+      </div>
+
+      {/* 注册抽屉 */}
+      <div 
+        className={`drawer-overlay ${registerOpen ? 'open' : ''}`} 
+        onClick={() => setRegisterOpen(false)}
+      ></div>
+      <div className={`drawer ${registerOpen ? 'open' : ''}`}>
+        <div className="drawer-header">
+          <h3>加入 PM茶水间</h3>
+          <button className="drawer-close" onClick={() => setRegisterOpen(false)}>×</button>
+        </div>
+        <div className="drawer-body">
+          <div className="form-group">
+            <label>昵称</label>
+            <input type="text" className="form-input" placeholder="给自己起个名字" />
+          </div>
+          <div className="form-group">
+            <label>邮箱</label>
+            <input type="email" className="form-input" placeholder="用于登录和找回密码" />
+          </div>
+          <div className="form-group">
+            <label>密码</label>
+            <input type="password" className="form-input" placeholder="6位以上密码" />
+          </div>
+          <div className="form-group">
+            <label>身份（选填）</label>
+            <select className="form-input">
+              <option>产品经理</option>
+              <option>产品助理</option>
+              <option>产品总监</option>
+              <option>创业中</option>
+              <option>学生</option>
+              <option>其他</option>
+            </select>
+          </div>
+          <button className="btn btn-primary btn-full">立即加入</button>
+          <p className="drawer-footer-text">
+            登录即表示同意<Link href="/terms">用户协议</Link>
           </p>
         </div>
       </div>
 
       {/* 帖子预览弹窗 */}
-      {previewPost && (
-        <>
-          <div
-            className={`drawer-overlay open`}
-            onClick={() => setPreviewPost(null)}
-          />
-          <div className="hot-post-float" style={{ top: '50%', left: '50%', right: 'auto', bottom: 'auto', transform: 'translate(-50%, -50%)', width: '500px', maxWidth: '90vw' }}>
-            <div className="hot-post-float-header">
-              <span>📖</span>
-              <span>帖子预览</span>
-              <button className="drawer-close" onClick={() => setPreviewPost(null)} style={{ marginLeft: 'auto' }}>×</button>
-            </div>
-            <div className="hot-post-float-content" style={{ padding: '24px' }}>
-              <div className="hot-post-title" style={{ fontSize: '18px', marginBottom: '16px' }}>{previewPost.title}</div>
-              <p style={{ fontSize: '14px', lineHeight: 1.8, color: 'var(--text-secondary)', marginBottom: '20px' }}>
-                {previewPost.preview}
-              </p>
-              <Link
-                href={`/post/${previewPost.id}`}
-                className="new-post-btn"
-                style={{ textDecoration: 'none' }}
-                onClick={() => setPreviewPost(null)}
-              >
-                查看完整帖子 →
-              </Link>
-            </div>
-          </div>
-        </>
+      {previewOpen && (
+        <div className="post-preview-popup" style={{ display: 'block' }}>
+          <div className="post-preview-content">{previewText}</div>
+          <Link href="/post/1" className="btn btn-primary post-preview-btn">阅读全文</Link>
+        </div>
       )}
-    </div>
+      {previewOpen && (
+        <div 
+          className="drawer-overlay open" 
+          onClick={() => setPreviewOpen(false)}
+          style={{ zIndex: 2999 }}
+        ></div>
+      )}
+    </>
   );
 }
